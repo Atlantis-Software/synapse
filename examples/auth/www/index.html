@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Authentication Example</title>
+    <style>
+      body {
+        padding: 50px;
+        font: 13px Helvetica, Arial, sans-serif;
+      }
+      #message {
+        margin: 10px;
+      }
+      .error {
+          color: red;
+      }
+      .success {
+          color: green;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+      $(function() {
+        var sessionID = null;
+        $('#login-form').submit(function(event) {
+          event.preventDefault();
+          if (sessionID !== null) {
+            return;
+          }
+          $.ajax({
+            method: "POST",
+            url: "/API/user:login",
+            data: { username: $('#username').val(), password: $('#password').val() }
+          }).done(function(data) {
+            sessionID = data.sessionID;
+            $('#message').text(data.msg).removeClass('error').addClass('success').show();
+            $('#username').prop('disabled', true);
+            $('#password').prop('disabled', true);
+          }).fail(function(err) {
+            $('#message').text(err.responseText).removeClass('success').addClass('error').show().fadeOut( 1500 );
+          });
+        });
+        $('#restricted').click(function(event) {
+          event.preventDefault();
+          $.ajax({
+            method: "POST",
+            url: "/API/user:restricted",
+            data: { sessionID: sessionID }
+          }).done(function(data) {
+            $('#content').text(data.msg);
+          }).fail(function(err) {
+            $('#content').text(err.responseText);
+          });    
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <p>
+    Try accessing <a id="restricted" href="#restricted">restricted</a>, then authenticate with "foo" and "foobar".
+    </p>
+    <form method="post" id="login-form">
+      <p>
+        <label>Username:</label>
+        <input id="username" type="text" name="username">
+      </p>
+      <p>
+        <label>Password:</label>
+        <input id="password" type="text" name="password">
+      </p>
+      <p>
+        <input type="submit" value="Login"><span id="message"></span>
+      </p>
+    </form>
+    <p id="content"></p>
+  </body>
+</html>
