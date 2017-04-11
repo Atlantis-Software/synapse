@@ -1,14 +1,12 @@
 {
-  "name": "synapse",
+  "name": "@synapps/core",
   "description": "web framework for node",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Alexandre Tiertant <a.tiertant@atlantis-software.net>",
-  "contributors": [
-  ],
   "license": "MIT",
   "main": "./index.js",
-  "repository": "",
-  "homepage": "",
+  "repository": "https://github.com/Atlantis-Software/synapps",
+  "homepage": "https://github.com/Atlantis-Software/synapps",
   "keywords": [
     "framework",
     "web",
@@ -34,8 +32,5 @@
   },
   "engines": {
     "node": ">= 0.10.0"
-  },
-  "scripts": {
-    "test": ""
   }
 }
