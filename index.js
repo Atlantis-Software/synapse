@@ -6,61 +6,65 @@ var io = require('./lib/io');
 
 module.exports = function() {
   var noop = function() {};
-  var synapse = {};
+  var synapps = {};
 
-  synapse._config = {
+  synapps._config = {
     staticDir: false,
     apiDir: 'API',
     debug: false,
     indexScript: module.parent.filename
   };
 
-  synapse.debug = function(level, msg) {
+  synapps.debug = function(level, msg) {
     console.log(msg);
   };
 
-  // configure synapse app
-  synapse.set = function(key, value) {
-    synapse._config[key] = value;
+  // configure synapps app
+  synapps.set = function(key, value) {
+    synapps._config[key] = value;
   };
 
-  synapse.use = noop;
-  synapse.route = noop;
-  synapse.listen = noop;
-  synapse.isMaster = false;
-  synapse.isWorker = false;
+  synapps.use = noop;
+  synapps.route = noop;
+  synapps.listen = noop;
+  synapps.isMaster = false;
+  synapps.isWorker = false;
 
   if (!process.env.isWorker) {
     // Master
-    synapse.isMaster = true;
-    synapse.listen = function(port) {
-      synapse._scheduler = scheduler(synapse);
-      synapse._http = http(synapse);
-      synapse._http.listen(port);
-      synapse._io = io(synapse);
-      synapse.debug(1, 'Server is listening on port: ' + port);
+    synapps.isMaster = true;
+    synapps.listen = function(port) {
+      synapps._config.name = synapps._config.name || 'synapps';
+      synapps._config.masterName = synapps._config.name;
+      synapps._scheduler = scheduler(synapps);
+      synapps._http = http(synapps);
+      synapps._http.listen(port);
+      synapps._io = io(synapps);
+      synapps.debug(1, 'Server is listening on port: ' + port);
     };
   } else {
     // Worker
-    synapse.debug(1, 'Starting Worker id: ' + process.env.WORKER_NAME);
-    synapse.isWorker = true;
-    synapse._middlewares = [];
-    synapse._policies = {};
-    synapse._router = router(synapse);
+    synapps.debug(1, 'Starting Worker id: ' + process.env.WORKER_NAME);
+    synapps.isWorker = true;
+    synapps._middlewares = [];
+    synapps._policies = {};
+    synapps._router = router(synapps);
 
     // add a middleware
-    synapse.use = function(middleware) {
-      synapse._middlewares.push(middleware);
+    synapps.use = function(middleware) {
+      synapps._middlewares.push(middleware);
     };
 
-    synapse.route = function(route, definition) {
-      return synapse._router.addRoute(route, definition);
+    synapps.route = function(route, definition) {
+      return synapps._router.addRoute(route, definition);
     };
 
-    synapse.listen = function() {
-      worker.run(synapse);
+    synapps.listen = function() {
+      synapps._config.masterName = synapps._config.name || 'synapps';
+      synapps._config.name = process.env.WORKER_NAME;
+      worker.run(synapps);
     }
   }
 
-  return synapse;
+  return synapps;
 };
