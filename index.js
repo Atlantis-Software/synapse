@@ -3,6 +3,7 @@ var worker = require('./lib/worker');
 var scheduler = require('./lib/scheduler');
 var http = require('./lib/http');
 var io = require('./lib/io');
+var IPC = require('./lib/ipc');
 
 module.exports = function() {
   var noop = function() {};
@@ -30,12 +31,18 @@ module.exports = function() {
   synapps.isMaster = false;
   synapps.isWorker = false;
 
+
   if (!process.env.isWorker) {
     // Master
     synapps.isMaster = true;
+
     synapps.listen = function(port) {
+       // set process name
       synapps._config.name = synapps._config.name || 'synapps';
       synapps._config.masterName = synapps._config.name;
+      // init ipc
+      var ipc = IPC(synapps);
+      synapps._ipc = new ipc();
       synapps._scheduler = scheduler(synapps);
       synapps._http = http(synapps);
       synapps._http.listen(port);
@@ -60,8 +67,12 @@ module.exports = function() {
     };
 
     synapps.listen = function() {
+      // set workers and master names
       synapps._config.masterName = synapps._config.name || 'synapps';
       synapps._config.name = process.env.WORKER_NAME;
+      // init ipc
+      var ipc = IPC(synapps);
+      synapps._ipc = new ipc();
       worker.run(synapps);
     }
   }
