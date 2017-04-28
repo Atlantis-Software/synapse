@@ -17,7 +17,9 @@ module.exports = function() {
   };
 
   synapps.debug = function(level, msg) {
-    console.log(msg);
+    if (level <= this._config.debug) {
+      console.log(msg);
+    }
   };
 
   // configure synapps app
@@ -28,6 +30,7 @@ module.exports = function() {
   synapps.use = noop;
   synapps.route = noop;
   synapps.listen = noop;
+  synapps.policy = noop;
   synapps.isMaster = false;
   synapps.isWorker = false;
 
@@ -74,6 +77,10 @@ module.exports = function() {
       var ipc = IPC(synapps);
       synapps._ipc = new ipc();
       worker.run(synapps);
+    }
+
+    synapps.policy = function(name, fn) {
+      synapps._policies[name] = fn;
     }
   }
 
