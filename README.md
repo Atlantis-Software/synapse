@@ -150,12 +150,13 @@ basicApp.use(function(req, next) {
   next();
 });
 
+// Set a policy
 basicApp.policy('guard', function(req, next) {
   // do some guard stuff here
   if (isAValidUser()) {
     return next();
   }
-  return next('not allowed');
+  next('not allowed');
 });
 
 basicApp.route('example', {
