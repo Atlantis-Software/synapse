@@ -72,7 +72,7 @@ The differents parameterName and their corresponding arguments type are :
 * `name<string>` Name of the node
 * `ipcLocalPort<integer>` Internal port for communicating with other nodes
 * `debug<integer>` Set the node verbose level
-* `tls<object>` Used to set up tls. See [here](#setting_up_tls) for more details
+* `tls<object>` Used to set up tls. See [here](#setting-up-tls) for more details
 
 #### Use()
 `.use(middleware<function>)`
