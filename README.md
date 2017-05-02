@@ -14,21 +14,21 @@ var synapps = require('synapps');
 var basicApp = synapps();
 ```
 
-Then, set the various properties of the node ( with [set()](.#set()) )
+Then, set the various properties of the node ( with [set()](#set()) )
 ```javascript
 basicApp.set('name', 'basicApp');
 basicApp.set('ipcLocalPort', 8001);
 basicApp.set('debug', 0);
 ```
 
-You can then optionally set middlewares... ( with [use()](.#use()) )
+You can then optionally set middlewares... ( with [use()](#use()) )
 ```javascript
 basicApp.use(function(req, next) {
   req.data.msg += ' - part added by middleware';
 });
 ```
 
-...or policies ( with [policy()](.#policy()) )
+...or policies ( with [policy()](#policy()) )
 ```javascript
 basicApp.policy('checkToken', function(req, next) {
   if (req.data.token === 'let me pass') {
@@ -38,7 +38,7 @@ basicApp.policy('checkToken', function(req, next) {
 });
 ```
 
-Add the routes ( with [route()](.#route()) )
+Add the routes ( with [route()](#route()) )
 ```javascript
 basicApp.route('test', {
   ping: [
@@ -57,7 +57,7 @@ basicApp.route('test', {
 });
 ```
 
-Finally, start the node ( with [listen()](.#listen()) )
+Finally, start the node ( with [listen()](#listen()) )
 
 ```javascript
 basicApp.listen(8050);
@@ -72,7 +72,7 @@ The differents parameterName and their corresponding arguments type are :
 * `name<string>` Name of the node
 * `ipcLocalPort<integer>` Internal port for communicating with other nodes
 * `debug<integer>` Set the node verbose level
-* `tls<object>` Used to set up tls. See [here](.#setting_up_tls()) for more details
+* `tls<object>` Used to set up tls. See [here](#setting_up_tls()) for more details
 
 #### Use()
 `.use(middleware<function>)`
