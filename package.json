@@ -1,7 +1,7 @@
 {
   "name": "@synapps/core",
   "description": "web framework for node",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Alexandre Tiertant <a.tiertant@atlantis-software.net>",
   "license": "MIT",
   "main": "./index.js",
@@ -20,6 +20,7 @@
     "test": "node ./test/runner.js"
   },
   "dependencies": {
+    "moment-timezone": "0.5.13",
     "asynk": "0.0.12",
     "formidable": "1.1.1",
     "lodash": "4.17.4",
