@@ -8,8 +8,10 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+before_script:
+  openssl req  -newkey rsa:2048 -nodes -keyout test.key -out test.csr
+  openssl req  -newkey rsa:2048 -nodes -keyout test.key -x509 -days 365 -out test.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
 node_js:
-  - '0.12'
   - '4'
   - '5'
   - '6'
