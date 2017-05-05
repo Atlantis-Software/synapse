@@ -63,7 +63,7 @@ describe('cluster', function() {
   });
 
   it('request a dead node', function(done) {
-    // clusterNode2.kill();
+    clusterNode2.kill();
     client.http.emit('cluster:ping').asCallback(function(err, data) {
       assert(!data);
       assert(err);
@@ -73,13 +73,13 @@ describe('cluster', function() {
   });
 
   after(function(done) {
-    //clusterNode2.removeListener('data', onData2);
-    //clusterNode2.stderr.unpipe(process.stdout);
-    //clusterNode1.removeListener('data', onData1);
-    //clusterNode1.stderr.unpipe(process.stdout);
+    clusterNode2.removeListener('data', onData2);
+    clusterNode2.stderr.unpipe(process.stdout);
+    clusterNode1.removeListener('data', onData1);
+    clusterNode1.stderr.unpipe(process.stdout);
 
-    //clusterNode2.kill();
-    //clusterNode1.kill();
+    clusterNode2.kill();
+    clusterNode1.kill();
     done();
   });
 });
