@@ -3,7 +3,7 @@ var _ = require('lodash');
 
 var middlewareApp = synapps();
 middlewareApp.set('name', 'middlewareApp');
-middlewareApp.set('ipcLocalPort', 8001);
+middlewareApp.set('ipcLocalPort', 8004);
 middlewareApp.set('debug', 0);
 
 

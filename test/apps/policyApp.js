@@ -3,7 +3,7 @@ var _ = require('lodash');
 
 var policyApp = synapps();
 policyApp.set('name', 'policyApp');
-policyApp.set('ipcLocalPort', 8001);
+policyApp.set('ipcLocalPort', 8005);
 policyApp.set('debug', 0);
 
 policyApp.policy('named', function(req, next) {

@@ -4,8 +4,8 @@ var _ = require('lodash');
 var basicApp = synapps();
 
 basicApp.set('name', 'basicApp');
-basicApp.set('ipcLocalPort', 8001);
-basicApp.set('debug', 9);
+basicApp.set('ipcLocalPort', 8003);
+basicApp.set('debug', 0);
 
 basicApp.route('test', {
   ping: [
