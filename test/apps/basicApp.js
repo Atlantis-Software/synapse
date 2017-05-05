@@ -5,7 +5,7 @@ var basicApp = synapps();
 
 basicApp.set('name', 'basicApp');
 basicApp.set('ipcLocalPort', 8001);
-basicApp.set('debug', 0);
+basicApp.set('debug', 9);
 
 basicApp.route('test', {
   ping: [
