@@ -4,6 +4,7 @@ var scheduler = require('./lib/scheduler');
 var http = require('./lib/http');
 var io = require('./lib/io');
 var IPC = require('./lib/ipc');
+var asynk = require('asynk');
 
 module.exports = function() {
   var noop = function() {};
@@ -39,7 +40,9 @@ module.exports = function() {
     // Master
     synapps.isMaster = true;
 
-    synapps.listen = function(port) {
+    synapps.listen = function(port, cb) {
+      var httpReady = asynk.deferred();
+      var ipcReady = asynk.deferred();
        // set process name
       synapps._config.name = synapps._config.name || 'synapps';
       synapps._config.masterName = synapps._config.name;
@@ -48,9 +51,17 @@ module.exports = function() {
       synapps._ipc = new ipc();
       synapps._scheduler = scheduler(synapps);
       synapps._http = http(synapps);
-      synapps._http.listen(port);
+      synapps._http.listen(port, function(err) {
+        httpReady.resolve();
+      });
       synapps._io = io(synapps);
       synapps.debug(1, 'Server is listening on port: ' + port);
+      synapps._ipc.on('ready', function() {
+        ipcReady.resolve();
+      });
+      if (cb) {
+        asynk.when(httpReady, ipcReady).asCallback(cb);
+      }
     };
   } else {
     // Worker

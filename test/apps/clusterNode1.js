@@ -43,4 +43,9 @@ clusterNode1.route('cluster', {
   ]
 });
 
-clusterNode1.listen(8051);
+clusterNode1.listen(8051, function(err, data) {
+  if (err) {
+    console.error(err);
+  }
+  console.log('ready');
+});

@@ -25,4 +25,9 @@ clusterNode2.route('cluster', {
   ]
 });
 
-clusterNode2.listen(8052);
+clusterNode2.listen(8052, function(err, data) {
+  if (err) {
+    console.error(err);
+  }
+  console.log('ready');
+});

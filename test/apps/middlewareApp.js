@@ -41,4 +41,9 @@ middlewareApp.route('middleware', {
   ]
 });
 
-middlewareApp.listen(8053);
+middlewareApp.listen(8053, function(err, data) {
+  if (err) {
+    console.error(err);
+  }
+  console.log('ready');
+});

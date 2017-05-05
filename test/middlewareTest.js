@@ -7,15 +7,21 @@ var _ = require('lodash');
 describe('middlewares', function() {
   var middlewareApp;
   var client;
+  var onData;
 
   before(function(done) {
+    onData = function(data) {
+      if (data.toString().startsWith("ready")) {
+        done();
+      } else {
+        console.log(data.toString());
+      }
+    };
     middlewareApp = child_process.exec('node ' + path.join(__dirname, './apps/middlewareApp.js'));
-    middlewareApp.stdout.pipe(process.stdout);
+    middlewareApp.stdout.on('data', onData);
     middlewareApp.stderr.pipe(process.stdout);
 
     client = new Client('localhost', 8053);
-
-    setTimeout(done, 1000);
   });
 
   it('should be intercepted and modified by middleware', function(done) {
@@ -48,7 +54,7 @@ describe('middlewares', function() {
   });
 
   after(function(done) {
-    middlewareApp.stdout.unpipe(process.stdout);
+    middlewareApp.removeListener('data', onData);
     middlewareApp.stderr.unpipe(process.stdout);
     middlewareApp.kill();
     done();

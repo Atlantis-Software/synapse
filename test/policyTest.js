@@ -7,15 +7,21 @@ var _ = require('lodash');
 describe('policies', function() {
   var policyApp;
   var comPolicyApp;
+  var onData;
 
   before(function(done) {
+    onData = function(data) {
+      if (data.toString().startsWith("ready")) {
+        done();
+      } else {
+        console.log(data.toString());
+      }
+    };
     policyApp = child_process.exec('node ' + path.join(__dirname, '/apps/policyApp.js'));
-    policyApp.stdout.pipe(process.stdout);
+    policyApp.stdout.on('data', onData);
     policyApp.stderr.pipe(process.stdout);
 
     client = new Client('localhost', 8054);
-
-    setTimeout(done, 1000);
   });
 
   it('named policy', function(done) {
@@ -126,7 +132,7 @@ describe('policies', function() {
   });
 
   after(function(done) {
-    policyApp.stdout.unpipe(process.stdout);
+    policyApp.removeListener('data', onData);
     policyApp.stderr.unpipe(process.stdout);
     policyApp.kill();
     done();

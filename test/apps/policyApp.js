@@ -136,4 +136,9 @@ policyApp.route('policy', {
   ],
 });
 
-policyApp.listen(8054);
+policyApp.listen(8054, function(err, data) {
+  if (err) {
+    console.error(err);
+  }
+  console.log('ready');
+});

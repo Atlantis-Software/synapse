@@ -6,15 +6,21 @@ var _ = require('lodash');
 
 describe('datatypes', function() {
   var basicApp;
-  var comFirstApp;
+  var client;
+  var onData;
 
   before(function(done) {
+    onData = function(data) {
+      if (data.toString().startsWith("ready")) {
+        done();
+      } else {
+        console.log(data.toString());
+      }
+    };
     basicApp = child_process.exec('node ' + path.join(__dirname, '/apps/basicApp.js'));
-    basicApp.stdout.pipe(process.stdout);
     basicApp.stderr.pipe(process.stdout);
-
+    basicApp.stdout.on('data', onData);
     client = new Client('localhost', 8050);
-    setTimeout(done, 1000);
   });
 
   describe('input', function() {
@@ -204,7 +210,7 @@ describe('datatypes', function() {
   });
 
   after(function(done) {
-    basicApp.stdout.unpipe(process.stdout);
+    basicApp.removeListener('data', onData);
     basicApp.stderr.unpipe(process.stdout);
     basicApp.kill();
     done();
