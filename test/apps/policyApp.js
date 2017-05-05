@@ -6,13 +6,6 @@ policyApp.set('name', 'policyApp');
 policyApp.set('ipcLocalPort', 8001);
 policyApp.set('debug', 0);
 
-policyApp.set('tls', {
-  publicKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.crt',
-  privateKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.key',
-  trusted: ['/home/dev/svn/synapse/atlbusiness/tls/domain.crt'],
-  port: 8104
-});
-
 policyApp.policy('named', function(req, next) {
   if (req.data.msg === 'let me pass') {
     return next();
