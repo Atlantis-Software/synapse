@@ -10,16 +10,24 @@ describe('datatypes', function() {
   var onData;
 
   before(function(done) {
+    console.log('BEFORE 1');
     onData = function(data) {
+      console.log('BEFORE 2');
       if (data.toString().startsWith("ready")) {
+        console.log('BEFORE 3');
         done();
       } else {
+        console.log('BEFORE 4 : ', data.toString());
         console.log(data.toString());
       }
     };
+    console.log('BEFORE 5');
     basicApp = child_process.exec('node ' + path.join(__dirname, '/apps/basicApp.js'));
+    console.log('BEFORE 6');
     basicApp.stderr.pipe(process.stdout);
+    console.log('BEFORE 7');
     basicApp.stdout.on('data', onData);
+    console.log('BEFORE 8');
     client = new Client('localhost', 8050);
   });
 
