@@ -1,26 +1,19 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
 var _ = require('lodash');
+var processHelper = require('./helpers/process');
 
 describe('datatypes', function() {
-  var basicApp;
+  var basicApp = processHelper('basicApp');
   var client;
-  var onData;
+
 
   before(function(done) {
-    onData = function(data) {
-      if (data.toString().startsWith("ready")) {
-        done();
-      } else {
-        console.log(data.toString());
-      }
-    };
-    basicApp = child_process.exec('node ' + path.join(__dirname, '/apps/basicApp.js'));
-    basicApp.stderr.pipe(process.stdout);
-    basicApp.stdout.on('data', onData);
-    client = new Client('localhost', 8050);
+    basicApp.start().done(function() {
+      client = new Client('localhost', 8050);
+      done();
+    });
+
   });
 
   describe('input', function() {
@@ -210,9 +203,6 @@ describe('datatypes', function() {
   });
 
   after(function(done) {
-    basicApp.removeListener('data', onData);
-    basicApp.stderr.unpipe(process.stdout);
-    basicApp.kill();
-    done();
+    basicApp.stop().asCallback(done);
   });
 });
