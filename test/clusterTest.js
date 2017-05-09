@@ -73,13 +73,41 @@ describe('cluster', function() {
   });
 
   after(function(done) {
-    clusterNode2.removeListener('data', onData2);
-    clusterNode2.stderr.unpipe(process.stdout);
-    clusterNode1.removeListener('data', onData1);
-    clusterNode1.stderr.unpipe(process.stdout);
+    var kill1 = asynk.deferred();
+    var onExit1 = function() {
+      kill1.resolve();
+    };
+    clusterNode1.on('exit', onExit1);
+    var kill2 = asynk.deferred();
+    var onExit2 = function() {
+      kill2.resolve();
+    };
+    clusterNode2.on('exit', onExit2);
+    try {
+      process.kill(clusterNode1.pid, 1);
+    } catch(e) {
+      if (e.message === 'kill ESRCH') {
+        return kill1.resolve();
+      }
+      throw e;
+    }
+    try {
+      process.kill(clusterNode2.pid, 1);
+    } catch(e) {
+      if (e.message === 'kill ESRCH') {
+        return kill2.resolve();
+      }
+      throw e;
+    }
 
-    clusterNode2.kill();
-    clusterNode1.kill();
-    done();
+    asynk.when(kill1,kill2).done(function() {
+      clusterNode1.removeListener('data', onData1);
+      clusterNode1.stderr.unpipe(process.stdout);
+      clusterNode2.removeListener('data', onData2);
+      clusterNode2.stderr.unpipe(process.stdout);
+      clusterNode1.removeListener('exit', onExit1);
+      clusterNode2.removeListener('exit', onExit2);
+      done();
+    });
   });
 });
