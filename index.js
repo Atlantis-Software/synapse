@@ -59,6 +59,9 @@ module.exports = function() {
       synapps._ipc.on('ready', function() {
         ipcReady.resolve();
       });
+      process.on('exit', function() {
+        synapps._http.close();
+      });
       if (cb) {
         asynk.when(httpReady, ipcReady).asCallback(cb);
       }
