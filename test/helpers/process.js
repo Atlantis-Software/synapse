@@ -27,6 +27,9 @@ module.exports = function(appName) {
     console.log('STOP CALL');
     var killed = asynk.deferred();
     var onExit = function() {
+      setInterval(function() {
+        console.log('PROCESS : ', appName, app.process && app.process.kill(0));
+      }, 100);
       console.log('STOP ONEXIT');
       app.process.stderr.unpipe(process.stdout);
       app.process.removeListener('data', onData);
