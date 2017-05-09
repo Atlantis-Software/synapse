@@ -52,12 +52,18 @@ module.exports = function() {
       synapps._scheduler = scheduler(synapps);
       synapps._http = http(synapps);
       synapps._http.listen(port, function(err) {
+        if (err) {
+          return httpReady.reject(err);
+        }
+        synapps.debug(1, 'Server is listening on port: ' + port);
         httpReady.resolve();
       });
       synapps._io = io(synapps);
-      synapps.debug(1, 'Server is listening on port: ' + port);
       synapps._ipc.on('ready', function() {
         ipcReady.resolve();
+      });
+      process.on('exit', function() {
+        synapps._http.close();
       });
       if (cb) {
         asynk.when(httpReady, ipcReady).asCallback(cb);

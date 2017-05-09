@@ -38,7 +38,6 @@ clusterNode1.route('cluster', {
       }).fail(function(err) {
         req.reject(err);
       });
-
     }
   ]
 });
@@ -48,4 +47,8 @@ clusterNode1.listen(8051, function(err, data) {
     console.error(err);
   }
   console.log('ready');
+});
+
+process.stdin.on('data', (data) => {
+  console.log('ALLO', data);
 });

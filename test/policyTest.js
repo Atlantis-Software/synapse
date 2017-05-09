@@ -1,27 +1,17 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
 var _ = require('lodash');
+var processHelper = require('./helpers/process');
 
 describe('policies', function() {
-  var policyApp;
+  var policyApp = processHelper('policyApp');
   var comPolicyApp;
-  var onData;
 
   before(function(done) {
-    onData = function(data) {
-      if (data.toString().startsWith("ready")) {
-        done();
-      } else {
-        console.log(data.toString());
-      }
-    };
-    policyApp = child_process.exec('node ' + path.join(__dirname, '/apps/policyApp.js'));
-    policyApp.stdout.on('data', onData);
-    policyApp.stderr.pipe(process.stdout);
-
-    client = new Client('localhost', 8054);
+    policyApp.start().done(function() {
+      client = new Client('localhost', 8054);
+      done();
+    });
   });
 
   it('named policy', function(done) {
@@ -132,10 +122,7 @@ describe('policies', function() {
   });
 
   after(function(done) {
-    policyApp.removeListener('data', onData);
-    policyApp.stderr.unpipe(process.stdout);
-    policyApp.kill();
-    done();
+    policyApp.stop().asCallback(done);
   });
 
 });

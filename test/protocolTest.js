@@ -1,26 +1,16 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
+var processHelper = require('./helpers/process');
 
-describe('protocoles', function() {
-  var basicApp;
+describe('protocols', function() {
+  var protocolApp = processHelper('protocolApp');
   var client;
-  var onData;
 
   before(function(done) {
-    onData = function(data) {
-      if (data.toString().startsWith("ready")) {
-        done();
-      } else {
-        console.log(data.toString());
-      }
-    };
-    basicApp = child_process.exec('node ' + path.join(__dirname, './apps/basicApp.js'));
-    basicApp.stdout.on('data', onData);
-    basicApp.stderr.pipe(process.stdout);
-
-    client = new Client('localhost', 8050);
+    protocolApp.start().done(function() {
+      client = new Client('localhost', 8055);
+      done();
+    });
   });
 
   it('http', function(done) {
@@ -57,9 +47,6 @@ describe('protocoles', function() {
   });
 
   after(function(done) {
-    basicApp.removeListener('data', onData);
-    basicApp.stderr.unpipe(process.stdout);
-    basicApp.kill();
-    done();
+    protocolApp.stop().asCallback(done);
   });
 });
