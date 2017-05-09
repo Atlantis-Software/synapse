@@ -38,6 +38,7 @@ module.exports = function(appName) {
       console.log('STOP KILL');
       app.process.on('close', onExit);
       app.process.stderr.destroy();
+      app.process.stdin.destroy();
       app.process.stdout.destroy();
       app.process.kill();
     } else {

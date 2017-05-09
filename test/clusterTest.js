@@ -17,6 +17,7 @@ describe('cluster', function() {
   });
 
   it('request second node through first', function(done) {
+    clusterNode1.process.stdin.write('end');
     client.http.emit('cluster:ping').asCallback(function(err, data) {
       if (err) {
         return done(err);
