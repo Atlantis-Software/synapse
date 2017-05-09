@@ -32,12 +32,14 @@ module.exports = function(appName) {
       app.process.stderr.unpipe(process.stdout);
       app.process.removeListener('data', onData);
       app.process.removeListener('exit', onExit);
+      app.process.stderr.destroy();
+      app.process.stdout.destroy();
       killed.resolve();
     };
     if (app.process && app.process.kill(0)) {
       console.log('STOP KILL');
       app.process.on('exit', onExit);
-      process.kill(app.process.pid);
+      app.process.kill();
     } else {
       console.log('STOP NOT KILL');
       killed.resolve();
