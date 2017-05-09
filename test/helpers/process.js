@@ -6,9 +6,12 @@ module.exports = function(appName) {
   var app = {};
   var onData;
   app.start = function() {
+    console.log('START CALL');
     var ready = asynk.deferred();
     onData = function(data) {
+      console.log('START ONDATA');
       if (data.toString().startsWith("ready")) {
+        console.log('START ONDATA READY');
         ready.resolve();
       } else {
         console.log(data.toString());
@@ -21,17 +24,21 @@ module.exports = function(appName) {
   };
 
   app.stop = function() {
+    console.log('STOP CALL');
     var killed = asynk.deferred();
     var onExit = function() {
+      console.log('STOP ONEXIT');
       app.process.stderr.unpipe(process.stdout);
       app.process.removeListener('data', onData);
       app.process.removeListener('exit', onExit);
       killed.resolve();
     };
     if (app.process && app.process.kill(0)) {
+      console.log('STOP KILL');
       app.process.on('exit', onExit);
       app.process.kill();
     } else {
+      console.log('STOP NOT KILL');
       killed.resolve();
     }
     return killed.promise();
