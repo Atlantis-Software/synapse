@@ -31,12 +31,12 @@ module.exports = function(appName) {
       console.log('STOP ONEXIT');
       app.process.stderr.unpipe(process.stdout);
       app.process.removeListener('data', onData);
-      app.process.removeListener('exit', onExit);
+      app.process.removeListener('close', onExit);
       killed.resolve();
     };
     if (app.process && app.process.kill(0)) {
       console.log('STOP KILL');
-      app.process.on('exit', onExit);
+      app.process.on('close', onExit);
       app.process.kill();
     } else {
       console.log('STOP NOT KILL');
