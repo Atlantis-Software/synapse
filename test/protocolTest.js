@@ -2,13 +2,13 @@ var assert = require('assert');
 var Client = require('./helpers/index');
 var processHelper = require('./helpers/process');
 
-describe('protocoles', function() {
-  var basicApp = processHelper('basicApp');
+describe('protocols', function() {
+  var protocolApp = processHelper('protocolApp');
   var client;
 
   before(function(done) {
-    basicApp.start().done(function() {
-      client = new Client('localhost', 8050);
+    protocolApp.start().done(function() {
+      client = new Client('localhost', 8055);
       done();
     });
   });
@@ -47,6 +47,6 @@ describe('protocoles', function() {
   });
 
   after(function(done) {
-    basicApp.stop().asCallback(done);
+    protocolApp.stop().asCallback(done);
   });
 });

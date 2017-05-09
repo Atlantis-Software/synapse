@@ -1,19 +1,13 @@
 var synapps = require('../../index');
 var _ = require('lodash');
 
-var basicApp = synapps();
+var datatypeApp = synapps();
 
-basicApp.set('name', 'basicApp');
-basicApp.set('ipcLocalPort', 8003);
-basicApp.set('debug', 0);
+datatypeApp.set('name', 'datatypeApp');
+datatypeApp.set('ipcLocalPort', 8003);
+datatypeApp.set('debug', 0);
 
-basicApp.route('test', {
-  ping: [
-    {},
-    function(req) {
-      req.resolve({response: 'PONG'});
-    }
-  ],
+datatypeApp.route('type', {
   required: [
     {
       input: {
@@ -29,10 +23,7 @@ basicApp.route('test', {
     function(req) {
       req.resolve({ok: true});
     }
-  ]
-});
-
-basicApp.route('type', {
+  ],
   string: [
     {
       input: {
@@ -157,7 +148,7 @@ basicApp.route('type', {
   ]
 });
 
-basicApp.route('get', {
+datatypeApp.route('get', {
   string: [
     {},
     function(req) {
@@ -190,7 +181,7 @@ basicApp.route('get', {
   ]
 });
 
-basicApp.listen(8050, function(err, data) {
+datatypeApp.listen(8050, function(err, data) {
   if (err) {
     console.error(err);
   }

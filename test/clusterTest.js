@@ -39,8 +39,8 @@ describe('cluster', function() {
   it('request a dead node', function(done) {
     clusterNode2.stop().done(function() {
       client.http.emit('cluster:ping').asCallback(function(err, data) {
-        assert(!data);
-        assert(err);
+        assert(!data, 'Should not return data');
+        assert(err, 'Should return an error');
         assert.strictEqual(err.message, 'Could not connect to node clusterNode2');
         done();
       });
