@@ -37,7 +37,7 @@ module.exports = function(appName) {
     if (app.process && app.process.kill(0)) {
       console.log('STOP KILL');
       app.process.on('exit', onExit);
-      app.process.kill('SIGKILL');
+      process.kill(app.process.pid);
     } else {
       console.log('STOP NOT KILL');
       killed.resolve();
