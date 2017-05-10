@@ -3,7 +3,7 @@ var Client = require('./helpers/index');
 var asynk = require('asynk');
 var processHelper = require('./helpers/process');
 
-describe('cluster', function() {
+xdescribe('cluster', function() {
   var clusterNode1 = processHelper('clusterNode1');
   var clusterNode2 = processHelper('clusterNode2');
   var client;
