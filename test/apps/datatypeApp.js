@@ -1,5 +1,6 @@
 var synapps = require('../../index');
 var _ = require('lodash');
+var hostHelper = require('../helpers/host');
 
 var datatypeApp = synapps();
 
@@ -181,9 +182,4 @@ datatypeApp.route('get', {
   ]
 });
 
-datatypeApp.listen(8050, function(err, data) {
-  if (err) {
-    console.error(err);
-  }
-  console.log('ready');
-});
+hostHelper(datatypeApp);

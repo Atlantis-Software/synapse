@@ -8,7 +8,7 @@ describe('policies', function() {
   var comPolicyApp;
 
   before(function(done) {
-    policyApp.start().done(function() {
+    policyApp.start(8054).done(function() {
       client = new Client('localhost', 8054);
       done();
     });

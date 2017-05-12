@@ -1,5 +1,6 @@
 var synapps = require('../../index');
 var _ = require('lodash');
+var hostHelper = require('../helpers/host');
 
 var middlewareApp = synapps();
 middlewareApp.set('name', 'middlewareApp');
@@ -41,9 +42,4 @@ middlewareApp.route('middleware', {
   ]
 });
 
-middlewareApp.listen(8053, function(err, data) {
-  if (err) {
-    console.error(err);
-  }
-  console.log('ready');
-});
+hostHelper(middlewareApp);

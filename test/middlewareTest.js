@@ -8,7 +8,7 @@ describe('middlewares', function() {
   var client;
 
   before(function(done) {
-    middlewareApp.start().done(function() {
+    middlewareApp.start(8053).done(function() {
       client = new Client('localhost', 8053);
       done();
     });

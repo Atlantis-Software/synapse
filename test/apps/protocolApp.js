@@ -1,5 +1,6 @@
 var synapps = require('../../index');
 var _ = require('lodash');
+var hostHelper = require('../helpers/host');
 
 var protocolApp = synapps();
 
@@ -16,9 +17,4 @@ protocolApp.route('test', {
   ]
 });
 
-protocolApp.listen(8055, function(err, data) {
-  if (err) {
-    console.error(err);
-  }
-  console.log('ready');
-});
+hostHelper(protocolApp);

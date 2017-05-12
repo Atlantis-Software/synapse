@@ -1,40 +1,68 @@
 var child_process = require('child_process');
 var asynk = require('asynk');
 var path = require('path');
+var socket = require('../../lib/socket');
+var EventEmitter = require('events').EventEmitter;
+
+var fakeSynapps = {
+  debug: function() {}
+}
+var Socket = socket(fakeSynapps);
+var sock = new Socket();
+sock.bind(2345);
 
 module.exports = function(appName) {
-  var app = {};
-  var onData;
-  app.start = function() {
-    var ready = asynk.deferred();
-    onData = function(data) {
-      if (data.toString().startsWith("ready")) {
-        ready.resolve();
-      } else {
-        console.log(data.toString());
-      }
-    };
+  var app =  Object.create(EventEmitter.prototype);
+  app.running = false;
+
+  app.start = function(port) {
+    var self = this;
     app.process = child_process.exec('node ' + path.join(__dirname, '../apps/' + appName));
     app.process.stderr.pipe(process.stdout);
-    app.process.stdout.on('data', onData);
+    app.process.stdout.pipe(process.stdout);
+    app.emitter = null;
+    var ready = asynk.deferred();
+    var onRegister = function(identity, emitter) {
+      if (identity === appName) {
+        app.emitter = emitter;
+        app.emitter.emit('start', port);
+      }
+    };
+    var onMessage = function(task, data, emitter) {
+      if (task === 'app register' && data.identity === appName) {
+        self.emit('register', data.register);
+      }
+      if (task === 'started' && data === appName) {
+        app.running = true;
+        sock.removeListener('register', onRegister);
+        sock.removeListener('message', onMessage);
+        ready.resolve();
+      }
+    };
+    sock.on('register', onRegister);
+    sock.on('message', onMessage);
     return ready.promise();
   };
 
   app.stop = function() {
-    var killed = asynk.deferred();
-    var onExit = function() {
-      app.process.stderr.unpipe(process.stdout);
-      app.process.removeListener('data', onData);
-      app.process.removeListener('exit', onExit);
-      killed.resolve();
+    // app.process.stderr.unpipe(process.stdout);
+    // app.process.stdout.unpipe(process.stdout);
+    var stop = asynk.deferred();
+
+    var onMessage = function(task, data, emitter) {
+      if (task === 'stopped' && data === appName) {
+        app.running = false;
+        sock.removeListener('message', onMessage);
+        stop.resolve();
+      }
     };
-    if (app.process && app.process.kill(0)) {
-      app.process.on('exit', onExit);
-      app.process.kill();
-    } else {
-      killed.resolve();
+    sock.on('message', onMessage);
+    if (!app.running) {
+      sock.removeListener('message', onMessage);
+      stop.resolve();
     }
-    return killed.promise();
+    app.emitter.emit('stop', true);
+    return stop.promise();
   }
   return app;
 };

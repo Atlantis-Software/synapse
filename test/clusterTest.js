@@ -3,17 +3,22 @@ var Client = require('./helpers/index');
 var asynk = require('asynk');
 var processHelper = require('./helpers/process');
 
-xdescribe('cluster', function() {
+describe('cluster', function() {
   var clusterNode1 = processHelper('clusterNode1');
   var clusterNode2 = processHelper('clusterNode2');
   var client;
 
   before(function(done) {
-    var ready1 = clusterNode1.start();
-    var ready2 = clusterNode2.start();
+    clusterNode1.on('register', function(identity) {
+      if (identity === 'clusterNode2') {
+        asynk.when(ready1, ready2).asCallback(done);
+      }
+    });
+
+    var ready1 = clusterNode1.start(8051);
+    var ready2 = clusterNode2.start(8052);
 
     client = new Client('localhost', 8051);
-    asynk.when(ready1, ready2).asCallback(done);
   });
 
   it('request second node through first', function(done) {
