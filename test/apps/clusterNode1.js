@@ -2,6 +2,7 @@ var synapps = require('../../index');
 var asynk = require('asynk');
 var _ = require('lodash');
 var path = require('path');
+var hostHelper = require('../helpers/host');
 
 var clusterNode1 = synapps();
 clusterNode1.set('name', 'clusterNode1');
@@ -12,9 +13,9 @@ var keyPath = path.join(__dirname, '..', '..', 'test.key');
 var certificatePath = path.join(__dirname, '..', '..', 'test.crt');
 
 clusterNode1.set('tls', {
-  publicKey: certificatePath,
-  privateKey: keyPath,
-  trusted: [certificatePath],
+  key: keyPath,
+  cert: certificatePath,
+  ca: [certificatePath],
   port: 8101,
   connectTo: [{name: 'clusterNode2', host:'localhost', port: 8102}]
 });
@@ -43,9 +44,4 @@ clusterNode1.route('cluster', {
   ]
 });
 
-clusterNode1.listen(8051, function(err, data) {
-  if (err) {
-    console.error(err);
-  }
-  console.log('ready');
-});
+hostHelper(clusterNode1);

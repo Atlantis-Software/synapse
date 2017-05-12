@@ -7,7 +7,7 @@ describe('protocoles', function() {
   var client;
 
   before(function(done) {
-    protocolApp.start().done(function() {
+    protocolApp.start(8055).done(function() {
       client = new Client('localhost', 8055);
       done();
     });

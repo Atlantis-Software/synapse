@@ -9,7 +9,7 @@ describe('datatypes', function() {
 
 
   before(function(done) {
-    datatypeApp.start().done(function() {
+    datatypeApp.start(8050).done(function() {
       client = new Client('localhost', 8050);
       done();
     });
