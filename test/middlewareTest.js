@@ -1,21 +1,17 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
 var _ = require('lodash');
+var processHelper = require('./helpers/process');
 
 describe('middlewares', function() {
-  var middlewareApp;
+  var middlewareApp = processHelper('middlewareApp');
   var client;
 
   before(function(done) {
-    middlewareApp = child_process.exec('node ' + path.join(__dirname, './apps/middlewareApp.js'));
-    middlewareApp.stdout.pipe(process.stdout);
-    middlewareApp.stderr.pipe(process.stdout);
-
-    client = new Client('localhost', 8053);
-
-    setTimeout(done, 1000);
+    middlewareApp.start(8053).done(function() {
+      client = new Client('localhost', 8053);
+      done();
+    });
   });
 
   it('should be intercepted and modified by middleware', function(done) {
@@ -48,10 +44,7 @@ describe('middlewares', function() {
   });
 
   after(function(done) {
-    middlewareApp.stdout.unpipe(process.stdout);
-    middlewareApp.stderr.unpipe(process.stdout);
-    middlewareApp.kill();
-    done();
+    middlewareApp.stop().asCallback(done);
   });
 
 });

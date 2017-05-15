@@ -1,9 +1,5 @@
 var asynk = require('asynk');
 var _ = require('lodash');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var FormData = require('form-data');
-var querystring = require('querystring');
-var http = require('http');
 var request = require('request');
 
 module.exports = function(host, port, dynFolder) {

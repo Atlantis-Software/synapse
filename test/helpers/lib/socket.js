@@ -13,7 +13,7 @@ module.exports = function(host, port, dynFolder) {
   this.emit = function(route, data) {
     var deferred = asynk.deferred();
     var uid = Math.random().toString(36).substr(2, 9);
-    this.socket.emit('request', {request: route, uid, data: data}, function() {
+    this.socket.emit('request', {request: route, uid: uid, data: data}, function() {
       self.requests[uid] = {deferred: deferred};
     });
     return deferred.promise();
