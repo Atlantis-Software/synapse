@@ -43,6 +43,15 @@ describe('middlewares', function() {
     });
   });
 
+  it('should timeout', function(done) {
+    client.http.emit('middleware:test', {msg: 'Middleware timeout'}).asCallback(function(err, data) {
+      assert(!data);
+      assert(err);
+      assert.strictEqual(err.message, '#INTERNAL_SERVER_ERROR');
+      done();
+    });
+  });
+
   after(function(done) {
     middlewareApp.stop().asCallback(done);
   });
