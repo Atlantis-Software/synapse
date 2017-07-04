@@ -1,17 +1,12 @@
 var synapps = require('../../index');
 var _ = require('lodash');
+var hostHelper = require('../helpers/host');
 
 var middlewareApp = synapps();
 middlewareApp.set('name', 'middlewareApp');
-middlewareApp.set('ipcLocalPort', 8001);
+middlewareApp.set('ipcLocalPort', 8004);
 middlewareApp.set('debug', 0);
 
-middlewareApp.set('tls', {
-  publicKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.crt',
-  privateKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.key',
-  trusted: ['/home/dev/svn/synapse/atlbusiness/tls/domain.crt'],
-  port: 8103
-});
 
 middlewareApp.use(function(req, next) {
   if (req.data && req.data.msg) {
@@ -47,4 +42,4 @@ middlewareApp.route('middleware', {
   ]
 });
 
-middlewareApp.listen(8053);
+hostHelper(middlewareApp);

@@ -1,21 +1,17 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
 var _ = require('lodash');
+var processHelper = require('./helpers/process');
 
 describe('policies', function() {
-  var policyApp;
+  var policyApp = processHelper('policyApp');
   var comPolicyApp;
 
   before(function(done) {
-    policyApp = child_process.exec('node ' + path.join(__dirname, '/apps/policyApp.js'));
-    policyApp.stdout.pipe(process.stdout);
-    policyApp.stderr.pipe(process.stdout);
-
-    client = new Client('localhost', 8054);
-
-    setTimeout(done, 1000);
+    policyApp.start(8054).done(function() {
+      client = new Client('localhost', 8054);
+      done();
+    });
   });
 
   it('named policy', function(done) {
@@ -126,10 +122,7 @@ describe('policies', function() {
   });
 
   after(function(done) {
-    policyApp.stdout.unpipe(process.stdout);
-    policyApp.stderr.unpipe(process.stdout);
-    policyApp.kill();
-    done();
+    policyApp.stop().asCallback(done);
   });
 
 });

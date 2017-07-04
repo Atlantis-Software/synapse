@@ -1,19 +1,16 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
+var processHelper = require('./helpers/process');
 
 describe('protocoles', function() {
-  var basicApp;
+  var protocolApp = processHelper('protocolApp');
   var client;
 
   before(function(done) {
-    basicApp = child_process.exec('node ' + path.join(__dirname, './apps/basicApp.js'));
-    basicApp.stdout.pipe(process.stdout);
-    basicApp.stderr.pipe(process.stdout);
-
-    client = new Client('localhost', 8050);
-    setTimeout(done, 1000);
+    protocolApp.start(8055).done(function() {
+      client = new Client('localhost', 8055);
+      done();
+    });
   });
 
   it('http', function(done) {
@@ -50,9 +47,6 @@ describe('protocoles', function() {
   });
 
   after(function(done) {
-    basicApp.stdout.unpipe(process.stdout);
-    basicApp.stderr.unpipe(process.stdout);
-    basicApp.kill();
-    done();
+    protocolApp.stop().asCallback(done);
   });
 });

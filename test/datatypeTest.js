@@ -1,20 +1,19 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
 var _ = require('lodash');
+var processHelper = require('./helpers/process');
 
 describe('datatypes', function() {
-  var basicApp;
-  var comFirstApp;
+  var datatypeApp = processHelper('datatypeApp');
+  var client;
+
 
   before(function(done) {
-    basicApp = child_process.exec('node ' + path.join(__dirname, '/apps/basicApp.js'));
-    basicApp.stdout.pipe(process.stdout);
-    basicApp.stderr.pipe(process.stdout);
+    datatypeApp.start(8050).done(function() {
+      client = new Client('localhost', 8050);
+      done();
+    });
 
-    client = new Client('localhost', 8050);
-    setTimeout(done, 1000);
   });
 
   describe('input', function() {
@@ -153,7 +152,7 @@ describe('datatypes', function() {
 
   describe('required', function() {
     it('should work with all fields', function(done) {
-      client.http.emit('test:required', {
+      client.http.emit('type:required', {
         required: 'i am required',
         notRequired: 'i am not required'
       }).asCallback(function(err, data) {
@@ -166,7 +165,7 @@ describe('datatypes', function() {
     });
 
     it('should work with only required fields', function(done) {
-      client.http.emit('test:required', {
+      client.http.emit('type:required', {
         required: 'i am required'
       }).asCallback(function(err, data) {
         if (err) {
@@ -178,7 +177,7 @@ describe('datatypes', function() {
     });
 
     it('should not work with only non-required fields', function(done) {
-      client.http.emit('test:required', {
+      client.http.emit('type:required', {
         notRequired: 'i am not required'
       }).asCallback(function(err, data) {
         if (data) {
@@ -191,7 +190,7 @@ describe('datatypes', function() {
     });
 
     it('should not work without fields', function(done) {
-      client.http.emit('test:required').asCallback(function(err, data) {
+      client.http.emit('type:required').asCallback(function(err, data) {
         if (data) {
           return done(new Error('Should not work without fields'));
         }
@@ -204,9 +203,6 @@ describe('datatypes', function() {
   });
 
   after(function(done) {
-    basicApp.stdout.unpipe(process.stdout);
-    basicApp.stderr.unpipe(process.stdout);
-    basicApp.kill();
-    done();
+    datatypeApp.stop().asCallback(done);
   });
 });
