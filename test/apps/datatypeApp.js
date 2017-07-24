@@ -1,25 +1,14 @@
 var synapps = require('../../index');
 var _ = require('lodash');
+var hostHelper = require('../helpers/host');
 
-var firstApp = synapps();
-firstApp.set('name', 'firstApp');
-firstApp.set('ipcLocalPort', 8001);
-firstApp.set('debug', 0);
+var datatypeApp = synapps();
 
-firstApp.set('tls', {
-  publicKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.crt',
-  privateKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.key',
-  trusted: ['/home/dev/svn/synapse/atlbusiness/tls/domain.crt'],
-  port: 8100
-});
+datatypeApp.set('name', 'datatypeApp');
+datatypeApp.set('ipcLocalPort', 8003);
+datatypeApp.set('debug', 0);
 
-firstApp.route('test', {
-  ping: [
-    {},
-    function(req) {
-      req.resolve({response: 'PONG'});
-    }
-  ],
+datatypeApp.route('type', {
   required: [
     {
       input: {
@@ -35,10 +24,7 @@ firstApp.route('test', {
     function(req) {
       req.resolve({ok: true});
     }
-  ]
-});
-
-firstApp.route('type', {
+  ],
   string: [
     {
       input: {
@@ -163,7 +149,7 @@ firstApp.route('type', {
   ]
 });
 
-firstApp.route('get', {
+datatypeApp.route('get', {
   string: [
     {},
     function(req) {
@@ -196,4 +182,4 @@ firstApp.route('get', {
   ]
 });
 
-firstApp.listen(8050);
+hostHelper(datatypeApp);

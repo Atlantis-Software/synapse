@@ -1,16 +1,21 @@
 var synapps = require('../../index');
 var asynk = require('asynk');
 var _ = require('lodash');
+var path = require('path');
+var hostHelper = require('../helpers/host');
 
 var clusterNode1 = synapps();
 clusterNode1.set('name', 'clusterNode1');
 clusterNode1.set('ipcLocalPort', 8001);
 clusterNode1.set('debug', 0);
 
+var keyPath = path.join(__dirname, '..', '..', 'test.key');
+var certificatePath = path.join(__dirname, '..', '..', 'test.crt');
+
 clusterNode1.set('tls', {
-  publicKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.crt',
-  privateKey: '/home/dev/svn/synapse/atlbusiness/tls/domain.key',
-  trusted: ['/home/dev/svn/synapse/atlbusiness/tls/domain.crt'],
+  key: keyPath,
+  cert: certificatePath,
+  ca: [certificatePath],
   port: 8101,
   connectTo: [{name: 'clusterNode2', host:'localhost', port: 8102}]
 });
@@ -39,4 +44,4 @@ clusterNode1.route('cluster', {
   ]
 });
 
-clusterNode1.listen(8051);
+hostHelper(clusterNode1);

@@ -1,24 +1,24 @@
-var child_process = require('child_process');
-var path = require('path');
 var assert = require('assert');
 var Client = require('./helpers/index');
+var asynk = require('asynk');
+var processHelper = require('./helpers/process');
 
 describe('cluster', function() {
-  var clusterNode1;
-  var clusterNode2;
+  var clusterNode1 = processHelper('clusterNode1');
+  var clusterNode2 = processHelper('clusterNode2');
   var client;
 
   before(function(done) {
-    clusterNode2 = child_process.exec('node ' + path.join(__dirname, './apps/clusterNode2.js'));
-    clusterNode2.stdout.pipe(process.stdout);
-    clusterNode2.stderr.pipe(process.stdout);
+    clusterNode1.on('register', function(identity) {
+      if (identity === 'clusterNode2') {
+        asynk.when(ready1, ready2).asCallback(done);
+      }
+    });
 
-    clusterNode1 = child_process.exec('node ' + path.join(__dirname, './apps/clusterNode1.js'));
-    clusterNode1.stdout.pipe(process.stdout);
-    clusterNode1.stderr.pipe(process.stdout);
+    var ready1 = clusterNode1.start(8051);
+    var ready2 = clusterNode2.start(8052);
 
     client = new Client('localhost', 8051);
-    setTimeout(done, 1000);
   });
 
   it('request second node through first', function(done) {
@@ -42,23 +42,20 @@ describe('cluster', function() {
   });
 
   it('request a dead node', function(done) {
-    clusterNode2.kill();
-    client.http.emit('cluster:ping').asCallback(function(err, data) {
-      assert(!data);
-      assert(err);
-      assert.strictEqual(err.message, 'Could not connect to node clusterNode2');
-      done();
+    clusterNode2.stop().done(function() {
+      client.http.emit('cluster:ping').asCallback(function(err, data) {
+        assert(!data);
+        assert(err);
+        assert.strictEqual(err.message, 'Could not connect to node clusterNode2');
+        done();
+      });
     });
   });
 
   after(function(done) {
-    clusterNode2.stdout.unpipe(process.stdout);
-    clusterNode2.stderr.unpipe(process.stdout);
-    clusterNode1.stdout.unpipe(process.stdout);
-    clusterNode1.stderr.unpipe(process.stdout);
+    var kill1 = clusterNode1.stop();
+    var kill2 = clusterNode2.stop();
 
-    clusterNode2.kill();
-    clusterNode1.kill();
-    done();
+    asynk.when(kill1,kill2).asCallback(done);
   });
 });
