@@ -42,7 +42,7 @@ module.exports = function(host, port, dynFolder) {
       throw new Error('invalid response');
     }
     if (self.requests[response.notification.uid] && self.requests[response.notification.uid].deferred) {
-      self.requests[response.notification.uid].deferred.progress(response);
+      self.requests[response.notification.uid].deferred.notify(response);
     }
   });
 }
