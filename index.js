@@ -1,3 +1,4 @@
+var log4js = require('log4js');
 var router = require('./lib/router');
 var worker = require('./lib/worker');
 var scheduler = require('./lib/scheduler');
@@ -14,14 +15,14 @@ module.exports = function() {
   synapps._config = {
     staticDir: false,
     apiDir: 'API',
-    debug: false,
-    indexScript: module.parent.filename
+    debug: 'error',
+    indexScript: module.parent.filename,
+    logFile: 'synapps.log'
   };
 
   synapps.debug = function(level, msg) {
-    if (level <= this._config.debug) {
-      console.log(msg);
-    }
+    var logger = log4js.getLogger(synapps._config.name);
+    logger[level](msg);
   };
 
   // configure synapps app
@@ -40,6 +41,10 @@ module.exports = function() {
 
   if (!process.env.isWorker) {
     // Master
+    log4js.configure({
+      appenders: { master: { type: 'file', filename: synapps._config.logFile } },
+      categories: { default: { appenders: ['master'], level: synapps._config.debug } }
+    });
     synapps.isMaster = true;
     var lastSocketKey = 0;
     var socketMap = {};
@@ -65,7 +70,7 @@ module.exports = function() {
         httpReady.resolve();
       });
       synapps._io = io(synapps);
-      synapps.debug(1, 'Server is listening on port: ' + port);
+      synapps.debug('info', 'Server is listening on port: ' + port);
       synapps._ipc.on('ready', function() {
         ipcReady.resolve();
       });
@@ -102,7 +107,11 @@ module.exports = function() {
     };
   } else {
     // Worker
-    synapps.debug(1, 'Starting Worker id: ' + process.env.WORKER_NAME);
+    log4js.configure({
+      appenders: { worker: { type: 'file', filename: synapps._config.logFile } },
+      categories: { default: { appenders: ['worker'], level: synapps._config.debug } },
+    });
+    synapps.debug('info', 'Starting Worker id: ' + process.env.WORKER_NAME);
     synapps.isWorker = true;
     synapps._middlewares = [];
     synapps._policies = {};
