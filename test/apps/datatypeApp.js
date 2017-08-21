@@ -6,7 +6,7 @@ var datatypeApp = synapps();
 
 datatypeApp.set('name', 'datatypeApp');
 datatypeApp.set('ipcLocalPort', 8003);
-datatypeApp.set('debug', 0);
+datatypeApp.set('debug', 'error');
 
 datatypeApp.route('type', {
   required: [
