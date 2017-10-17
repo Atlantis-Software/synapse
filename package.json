@@ -17,13 +17,15 @@
     "api"
   ],
   "scripts": {
-    "test": "node ./test/runner.js"
+    "test": "node ./test/runner.js",
+    "debug": "node ./lib/debug.js"
   },
   "dependencies": {
     "amp": "~0.3.1",
     "amp-message": "~0.1.2",
     "asynk": "~0.0.12",
     "formidable": "~1.1.1",
+    "inquirer": "~3.1.1",
     "lodash": "4.17.4",
     "log4js": "~2.3.3",
     "memwatch-next": "~0.3.0",
