@@ -5,7 +5,7 @@ var hostHelper = require('../helpers/host');
 var middlewareApp = synapps();
 middlewareApp.set('name', 'middlewareApp');
 middlewareApp.set('ipcLocalPort', 8004);
-middlewareApp.set('debug', 0);
+middlewareApp.set('debug', 'error');
 
 
 middlewareApp.use(function(req, next) {

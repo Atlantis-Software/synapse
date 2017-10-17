@@ -6,7 +6,7 @@ var protocolApp = synapps();
 
 protocolApp.set('name', 'protocolApp');
 protocolApp.set('ipcLocalPort', 8006);
-protocolApp.set('debug', 0);
+protocolApp.set('debug', 'error');
 
 protocolApp.route('test', {
   ping: [
