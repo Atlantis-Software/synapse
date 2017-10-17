@@ -7,7 +7,7 @@ var hostHelper = require('../helpers/host');
 var clusterNode1 = synapps();
 clusterNode1.set('name', 'clusterNode1');
 clusterNode1.set('ipcLocalPort', 8001);
-clusterNode1.set('debug', 0);
+clusterNode1.set('debug', 'debug');
 
 var keyPath = path.join(__dirname, '..', '..', 'test.key');
 var certificatePath = path.join(__dirname, '..', '..', 'test.crt');

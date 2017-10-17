@@ -5,7 +5,7 @@ var hostHelper = require('../helpers/host');
 var policyApp = synapps();
 policyApp.set('name', 'policyApp');
 policyApp.set('ipcLocalPort', 8005);
-policyApp.set('debug', 0);
+policyApp.set('debug', 'error');
 
 policyApp.policy('named', function(req, next) {
   if (req.data.msg === 'let me pass') {
