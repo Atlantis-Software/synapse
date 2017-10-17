@@ -24,6 +24,8 @@ middlewareApp.use(function(req, next) {
         next();
       }, 0);
     }
+    if (req.data.msg === 'Middleware timeout') {
+    }
   }
 });
 
