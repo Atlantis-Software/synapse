@@ -41,14 +41,14 @@ module.exports = function() {
 
   if (!process.env.isWorker) {
     // Master
-    log4js.configure({
-      appenders: { master: { type: 'file', filename: synapps._config.logFile } },
-      categories: { default: { appenders: ['master'], level: synapps._config.debug } }
-    });
     synapps.isMaster = true;
     var lastSocketKey = 0;
     var socketMap = {};
     synapps.listen = function(port, cb) {
+      log4js.configure({
+        appenders: { master: { type: 'file', filename: synapps._config.logFile } },
+        categories: { default: { appenders: ['master'], level: synapps._config.debug } }
+      });
       var httpReady = asynk.deferred();
       var ipcReady = asynk.deferred();
        // set process name
@@ -107,11 +107,6 @@ module.exports = function() {
     };
   } else {
     // Worker
-    log4js.configure({
-      appenders: { worker: { type: 'file', filename: synapps._config.logFile } },
-      categories: { default: { appenders: ['worker'], level: synapps._config.debug } },
-    });
-    synapps.debug('info', 'Starting Worker id: ' + process.env.WORKER_NAME);
     synapps.isWorker = true;
     synapps._middlewares = [];
     synapps._policies = {};
@@ -130,6 +125,11 @@ module.exports = function() {
       // set workers and master names
       synapps._config.masterName = synapps._config.name || 'synapps';
       synapps._config.name = process.env.WORKER_NAME;
+      log4js.configure({
+        appenders: { worker: { type: 'file', filename: synapps._config.logFile } },
+        categories: { default: { appenders: ['worker'], level: synapps._config.debug } },
+      });
+      synapps.debug('info', 'Starting Worker id: ' + process.env.WORKER_NAME);
       // init ipc
       var ipc = IPC(synapps);
       synapps._ipc = new ipc();
