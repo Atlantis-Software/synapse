@@ -14,6 +14,14 @@ protocolApp.route('test', {
     function(req) {
       req.resolve({response: 'PONG'});
     }
+  ],
+  room: [
+    {},
+    function(req) {
+      req.socket.join('ROOM');
+      req.resolve({});
+      req.socket.to('ROOM').emit('room', {room: 'ROOM'});
+    }
   ]
 });
 

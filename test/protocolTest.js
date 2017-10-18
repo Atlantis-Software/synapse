@@ -35,6 +35,18 @@ describe('protocoles', function() {
     });
   });
 
+  it('socket io room', function(done) {
+    client.socket.emit('test:room', {}).asCallback(function(err, data) {
+      if (err) {
+        return done(err);
+      }
+    });
+    client.socket.on('room', function(data) {
+      assert.strictEqual(data.room, 'ROOM');
+      done();
+    });
+  });
+
   it('jsonp', function(done) {
     client.jsonp.emit('test:ping', {msg: 'PING'}).asCallback(function(err, data) {
       if (err) {

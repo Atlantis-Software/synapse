@@ -19,6 +19,8 @@ module.exports = function(host, port, dynFolder) {
     return deferred.promise();
   }
 
+  this.on = this.socket.on.bind(this.socket);
+
   this.socket.on('RESOLVE', function(response) {
     if (!response || !response.notification || !response.notification.uid) {
       throw new Error('invalid response');
