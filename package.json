@@ -1,7 +1,7 @@
 {
   "name": "@synapps/core",
   "description": "web framework for node",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "author": "Alexandre Tiertant <a.tiertant@atlantis-software.net>",
   "license": "MIT",
   "main": "./index.js",
@@ -31,7 +31,7 @@
     "moment-timezone": "~0.5.13",
     "offshore-validator": "~0.1.0",
     "socket.io": "~1.7.3",
-    "telepathymq": "0.0.1",
+    "telepathymq": "~0.0.2",
     "uuid": "~3.0.1"
   },
   "devDependencies": {
