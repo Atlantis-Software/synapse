@@ -1,47 +1,43 @@
-var socket = require('../../lib/socket');
+var telepathy = require('telepathymq');
 
 module.exports = function(synapps) {
   if (synapps.isMaster) {
-    var Socket = socket(synapps);
-    var sock = new Socket();
-    sock.set('identity', synapps._config.name);
-    var onMessage = function(task, data, emitter) {
-      switch(task) {
-        case 'start':
-          synapps.listen(data, function() {
-            emitter.emit('started', synapps._config.name);
-          });
-          break;
-        case 'stop':
-          synapps.close(function() {
-            emitter.emit('stopped', synapps._config.name);
-            sock.removeListener('message', onMessage);
-            process.exit();
-          });
-          break;
-      }
-    };
+    var sock = new telepathy(synapps._config.name);
+    sock.on('start', function(defer, port) {
+      synapps.listen(port, function() {
+        defer.resolve();
+      });
+    });
+    sock.on('stop', function(defer) {
+      synapps.close(function() {
+        defer.resolve();
+        sock.removeAllListeners();
+        setTimeout(function() {
+          process.exit();
+        }, 300);
+      });
+    });
+    var connected = false;
+    sock.register('appHelper', 'tcp://localhost:2345', function() {
+      connected = true;
+      registers.forEach(function(appRegister) {
+        sock.emit('appHelper', 'app register', appRegister);
+      });
+    });
+
     var registers = [];
-    var appEmitter = null;
+
     synapps.on('register', function(identity) {
       var appRegister = {
         identity: synapps._config.name,
         register: identity
       };
-      if (!appEmitter) {
+      if (!connected) {
         return registers.push(appRegister);
       }
-      appEmitter.emit('app register', appRegister);
+      sock.emit('appHelper', 'app register', appRegister);
     });
 
-    sock.register('appHelper', 2345, function(emitter) {
-      appEmitter = emitter;
-      registers.forEach(function(register) {
-        emitter.emit('app register', register);
-      });
-    });
-
-    sock.on('message', onMessage);
   } else {
     synapps.listen();
   }

@@ -36,7 +36,7 @@ describe('cluster', function() {
     client.http.emit('cluster:wrongNode').asCallback(function(err, data) {
       assert(!data);
       assert(err);
-      assert.strictEqual(err.message, 'Could not connect to node wrongNode');
+      assert.strictEqual(err.message, 'wrongNode is not registered');
       done();
     });
   });
@@ -46,7 +46,7 @@ describe('cluster', function() {
       client.http.emit('cluster:ping').asCallback(function(err, data) {
         assert(!data);
         assert(err);
-        assert.strictEqual(err.message, 'Could not connect to node clusterNode2');
+        assert.strictEqual(err.message, 'clusterNode2 is not registered');
         done();
       });
     });
@@ -56,6 +56,6 @@ describe('cluster', function() {
     var kill1 = clusterNode1.stop();
     var kill2 = clusterNode2.stop();
 
-    asynk.when(kill1,kill2).asCallback(done);
+    asynk.when(kill1, kill2).asCallback(done);
   });
 });

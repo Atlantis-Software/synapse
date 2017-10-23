@@ -3,4 +3,7 @@ node_modules
 .gitignore
 examples
 test
-
+package-lock.json
+synapps.log
+test.crt
+test.key

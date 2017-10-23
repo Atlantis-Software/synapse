@@ -1,15 +1,11 @@
 var child_process = require('child_process');
 var asynk = require('asynk');
 var path = require('path');
-var socket = require('../../lib/socket');
+var telepathy = require('telepathymq');
 var EventEmitter = require('events').EventEmitter;
 
-var fakeSynapps = {
-  debug: function() {}
-}
-var Socket = socket(fakeSynapps);
-var sock = new Socket();
-sock.bind(2345);
+var sock = new telepathy('processHelper');
+sock.listen(2345);
 
 module.exports = function(appName) {
   var app =  Object.create(EventEmitter.prototype);
@@ -20,27 +16,22 @@ module.exports = function(appName) {
     app.process = child_process.exec('node ' + path.join(__dirname, '../apps/' + appName));
     app.process.stderr.pipe(process.stdout);
     app.process.stdout.pipe(process.stdout);
-    app.emitter = null;
     var ready = asynk.deferred();
-    var onRegister = function(identity, emitter) {
+
+    sock.on('app register', function(data) {
+      self.emit('register', data.register);
+    });
+
+    sock.on('register', function(identity) {
       if (identity === appName) {
-        app.emitter = emitter;
-        app.emitter.emit('start', port);
+        sock.defer(appName, 'start', port).done(function(data) {
+          app.running = true;
+          sock.removeAllListeners('app register');
+          ready.resolve();
+        });
       }
-    };
-    var onMessage = function(task, data, emitter) {
-      if (task === 'app register' && data.identity === appName) {
-        self.emit('register', data.register);
-      }
-      if (task === 'started' && data === appName) {
-        app.running = true;
-        sock.removeListener('register', onRegister);
-        sock.removeListener('message', onMessage);
-        ready.resolve();
-      }
-    };
-    sock.on('register', onRegister);
-    sock.on('message', onMessage);
+    });
+
     return ready.promise();
   };
 
@@ -49,20 +40,16 @@ module.exports = function(appName) {
     // app.process.stdout.unpipe(process.stdout);
     var stop = asynk.deferred();
 
-    var onMessage = function(task, data, emitter) {
-      if (task === 'stopped' && data === appName) {
-        app.running = false;
-        sock.removeListener('message', onMessage);
-        stop.resolve();
-      }
-    };
-    sock.on('message', onMessage);
+    var stop = sock.defer(appName, 'stop');
+    stop.done(function() {
+      app.running = false;
+    });
+
     if (!app.running) {
-      sock.removeListener('message', onMessage);
-      stop.resolve();
+      return asynk.deferred().resolve();
     }
-    app.emitter.emit('stop', true);
-    return stop.promise();
+
+    return stop;
   }
   return app;
 };

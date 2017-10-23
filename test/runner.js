@@ -5,7 +5,7 @@ var child_process = require('child_process');
 var test = new mocha({
   bail: false,
   reporter: 'spec',
-  timeout: 20000
+  timeout: 4000
 });
 
 fs.readdirSync(__dirname).filter(function(file) {
