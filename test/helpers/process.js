@@ -38,7 +38,6 @@ module.exports = function(appName) {
   app.stop = function() {
     // app.process.stderr.unpipe(process.stdout);
     // app.process.stdout.unpipe(process.stdout);
-    var stop = asynk.deferred();
 
     var stop = sock.defer(appName, 'stop');
     stop.done(function() {

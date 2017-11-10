@@ -30,6 +30,7 @@ module.exports = function(host, port, dynFolder) {
       delete self.requests[response.notification.uid];
     }
   });
+
   this.socket.on('REJECT', function(response) {
     if (!response || !response.notification || !response.notification.uid) {
       throw new Error('invalid response');
@@ -39,6 +40,7 @@ module.exports = function(host, port, dynFolder) {
       delete self.requests[response.notification.uid];
     }
   });
+
   this.socket.on('NOTIFY', function(response) {
     if (!response || !response.notification || !response.notification.uid) {
       throw new Error('invalid response');
