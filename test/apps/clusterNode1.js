@@ -31,6 +31,38 @@ clusterNode1.route('cluster', {
       });
     }
   ],
+  resolve: [
+    {},
+    function(req) {
+      req.emit('clusterNode2', {request: 'cluster:done'}).done(function(result) {
+        return req.resolve(result.data);
+      }).fail(function(err) {
+        req.reject(err);
+      });
+    }
+  ],
+  reject: [
+    {},
+    function(req) {
+      req.emit('clusterNode2', {request: 'cluster:reject'}).done(function(result) {
+        return req.resolve(result.data);
+      }).fail(function(err) {
+        req.reject(err);
+      });
+    }
+  ],
+  notify: [
+    {},
+    function(req) {
+      req.emit('clusterNode2', {request: 'cluster:notify'}).done(function(result) {
+        return req.resolve(result.data);
+      }).fail(function(err) {
+        req.reject(err);
+      }).progress(function(msg) {
+        req.notify(msg);
+      });
+    }
+  ],
   wrongNode: [
     {},
     function(req) {
@@ -39,7 +71,16 @@ clusterNode1.route('cluster', {
       }).fail(function(err) {
         req.reject(err);
       });
-
+    }
+  ],
+  throw: [
+    {},
+    function(req) {
+      req.emit('clusterNode2', {request: 'cluster:pong'}).done(function(result) {
+        throw new Error('Throw after second node callback');
+      }).fail(function(err) {
+        req.reject(err);
+      });
     }
   ]
 });

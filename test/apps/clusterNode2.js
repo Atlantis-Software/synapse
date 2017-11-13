@@ -23,6 +23,26 @@ clusterNode2.route('cluster', {
     function(req) {
       req.resolve({response: 'PONG'});
     }
+  ],
+  done: [
+    {},
+    function(req) {
+      req.resolve('done');
+    }
+  ],
+  reject: [
+    {},
+    function(req) {
+      req.reject('rejected');
+    }
+  ],
+  notify: [
+    {},
+    function(req) {
+      req.notify('notif1');
+      req.notify('notif2');
+      req.resolve({result: 'notified'});
+    }
   ]
 });
 

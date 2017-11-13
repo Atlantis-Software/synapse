@@ -32,11 +32,59 @@ describe('cluster', function() {
     });
   });
 
+  it('check deferred resolve', function(done) {
+    client.http.emit('cluster:resolve').asCallback(function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      assert(data);
+      assert.strictEqual(data, 'done');
+      done();
+    });
+  });
+
+  it('check deferred reject', function(done) {
+    client.http.emit('cluster:reject').asCallback(function(err, data) {
+      assert(!data);
+      assert.strictEqual(JSON.parse(err.message).notification.msg, 'rejected');
+      done();
+    });
+  });
+
+  it('check deferred notify', function(done) {
+    var notifCount = 0;
+    client.socket.emit('cluster:notify').done(function(data) {
+      assert(data);
+      assert.strictEqual(data.result, 'notified');
+      assert.strictEqual(notifCount, 2);
+      done();
+    }).fail(function(err) {
+      if (err) {
+        return done(err);
+      }
+    }).progress(function(msg) {
+      ++notifCount;
+      if (notifCount === 1) {
+        assert.strictEqual(msg.data, 'notif1');
+      } else if (notifCount === 2) {
+        assert.strictEqual(msg.data, 'notif2');
+      }
+    });
+  });
+
   it('request an unknown node', function(done) {
     client.http.emit('cluster:wrongNode').asCallback(function(err, data) {
       assert(!data);
       assert(err);
       assert.strictEqual(err.message, 'wrongNode is not registered');
+      done();
+    });
+  });
+
+  it('make first node throw second node callback', function(done) {
+    client.http.emit('cluster:throw').asCallback(function(err, data) {
+      assert(!data);
+      assert(err);
       done();
     });
   });
