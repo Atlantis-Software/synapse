@@ -13,7 +13,7 @@ debugApp.route('test', {
   tick: [
     {},
     function(req) {
-      var n = 10000000;
+      var n = 30000000;
       var a = Array(n = n/2),
       t = (Math.sqrt(4+8*n)-2)/4,
       u = 0,

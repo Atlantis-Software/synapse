@@ -28,7 +28,7 @@ describe('debug', function() {
     });
   });
 
-  it('should detect (possible) memory leak', function(done) {
+  it.skip('should detect (possible) memory leak', function(done) {
     var logLength = fs.readFileSync('synapps.log').length;
     client.http.emit('test:memory', {msg: 'PING'}).asCallback(function(err, data) {
       if (err) {
