@@ -16,4 +16,4 @@ before_script:
   - openssl req -newkey rsa:2048 -nodes -keyout test.key -x509 -days 365 -out test.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
 script:
   - "npm run test-ci"
-after_script: "npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls"
+after_script: "npm install coveralls@2.10.0 && cat ./test/coverage/lcov.info | coveralls"
