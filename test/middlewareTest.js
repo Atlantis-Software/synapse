@@ -44,6 +44,7 @@ describe('middlewares', function() {
   });
 
   it('should timeout', function(done) {
+    this.timeout(4000);
     client.http.emit('middleware:test', {msg: 'Middleware timeout'}).asCallback(function(err, data) {
       assert(!data);
       assert(err);

@@ -9,3 +9,5 @@ package-lock.json
 synapps.log
 test.crt
 test.key
+coverage
+.nyc_output
