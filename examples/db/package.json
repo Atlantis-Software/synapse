@@ -1,0 +1,16 @@
+{
+  "description": "synapps sample db",
+  "author": "Alexandre Tiertant <a.tiertant@atlantis-software.net>",
+  "license": "MIT",
+  "main": "./index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "@synapps/orm": "^0.0.3",
+    "offshore-memory": "^0.1.0"
+  },
+  "engines": {
+    "node": ">= 6"
+  }
+}

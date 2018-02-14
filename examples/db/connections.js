@@ -1,8 +1,5 @@
 module.exports = {
-  memory_a: {
-    adapter: 'offshore-memory'
-  },
-  memory_b: {
+  memory: {
     adapter: 'offshore-memory'
   }
 };

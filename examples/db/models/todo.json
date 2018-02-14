@@ -1,15 +1,13 @@
 {
-  "identity": "user",
+  "identity": "todo",
+  "connection": "memory",
   "attributes": {
     "id": {
       "type": "integer",
       "autoIncrement": true,
       "primaryKey": true
     },
-    "login": {
-      "type": "string"
-    },
-    "email": {
+    "label": {
       "type": "string"
     }
   }

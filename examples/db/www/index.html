@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Database Example</title>
+    <style>
+      body {
+        padding: 50px;
+        font: 13px Helvetica, Arial, sans-serif;
+      }
+      #messageContainer {
+        height: 16px;
+      }
+      .error {
+          color: red;
+      }
+      .success {
+          color: green;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+      function updateTodos() {
+        $.ajax({
+          method: "POST",
+          url: "/API/todo:list",
+        }).done(function(data) {
+          $('#content').html('');
+          data.todos.forEach(function(todo) {
+            $('#content').append('<li>' + todo.label + '</li>');
+          });
+        }).fail(function(err) {
+          $('#message').text(err.responseText).removeClass('success').addClass('error').show().fadeOut( 1500 );
+        });
+      }
+      $(function() {
+        $('#todo-form').submit(function(event) {
+          event.preventDefault();
+          if (!$('#todo').val()) {
+            $('#message').text('todo label is required').removeClass('error').addClass('success').show().fadeOut( 1500 );
+            return;
+          }
+          $.ajax({
+            method: "POST",
+            url: "/API/todo:add",
+            data: { label: $('#todo').val() }
+          }).done(function(data) {
+            $('#todo').val('');
+            updateTodos();
+            $('#message').text(data.msg).removeClass('error').addClass('success').show().fadeOut( 1500 );
+          }).fail(function(err) {
+            $('#message').text(err.responseText).removeClass('success').addClass('error').show().fadeOut( 1500 );
+          });
+        });
+        updateTodos();
+      });
+    </script>
+  </head>
+  <body>
+    <h1>TODO</h1>
+    <div id="messageContainer">
+        <span id="message"></span>
+    </div>
+    <form method="post" id="todo-form">
+      <p>
+        <label>todo label:</label>
+        <input id="todo" type="text" name="todo">
+        <input type="submit" value="add">
+      </p>
+    </form>
+    <p>
+      <h2>Todo List</h2>
+      <ul id="content">
+      </ul>
+    </p>
+  </body>
+</html>
