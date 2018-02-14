@@ -1,4 +1,5 @@
-# synapse
+# synapps
+synapps is a web framework for Node.js
 
 [![NPM Version](https://img.shields.io/npm/v/@synapps/core.svg)](https://www.npmjs.com/package/@synapps/core)
 [![NPM Downloads](https://img.shields.io/npm/dm/@synapps/core.svg)](https://www.npmjs.com/package/@synapps/core)
@@ -43,3 +44,41 @@ Installation is done using the
 ```bash
 $ npm install @synapps/core
 ```
+
+## Docs
+
+Visit the [Wiki](https://github.com/Atlantis-Software/synapps/wiki)
+
+## Examples
+
+  To view the examples, clone the Synapps repo and install the dependencies:
+
+```bash
+$ git clone git://github.com/Atlantis-Software/synapps.git
+$ cd synapps/
+$ npm install
+```
+
+  Then install the dependencies and run whichever example you want:
+
+```bash
+$ cd examples/auth
+$ npm install
+$ node index
+```
+
+## Tests
+
+  To run the test suite, first install the dependencies, then run `npm test`:
+
+```bash
+$ git clone git://github.com/Atlantis-Software/synapps.git
+$ cd synapps/
+$ npm install
+$ npm test
+```
+
+
+## License
+
+  [MIT](LICENSE.md)
