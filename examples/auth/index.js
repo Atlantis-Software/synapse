@@ -2,11 +2,11 @@
  * Module dependencies.
  */
 
-var synapse = require('../..');
-var session = require('synapse-session');
+var Synapps = require('../..');
+var session = require('@synapps/session');
 var hash = require('./pass').hash;
 
-var app = module.exports = synapse();
+var app = module.exports = Synapps();
 
 // config
 app.set('staticDir', __dirname + '/www');
@@ -108,4 +108,5 @@ app.route('user', {
   ]
 });
 
-app.listen(8080);
+app.listen(3000);
+console.log('Visit http://localhost:3000');

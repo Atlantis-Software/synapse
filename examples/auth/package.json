@@ -1,0 +1,15 @@
+{
+  "description": "synapps sample auth",
+  "author": "Alexandre Tiertant <a.tiertant@atlantis-software.net>",
+  "license": "MIT",
+  "main": "./index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "@synapps/session": "^0.0.2"
+  },
+  "engines": {
+    "node": ">= 6"
+  }
+}
