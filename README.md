@@ -69,12 +69,13 @@ $ node index
 
 ## Tests
 
-  To run the test suite, first install the dependencies, then run `npm test`:
+  To run the test suite, first install the dependencies, generate ssl key, then run `npm test`:
 
 ```bash
 $ git clone git://github.com/Atlantis-Software/synapps.git
 $ cd synapps/
 $ npm install
+$ openssl req -newkey rsa:2048 -nodes -keyout test.key -x509 -days 365 -out test.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
 $ npm test
 ```
 
