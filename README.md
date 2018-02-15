@@ -13,21 +13,16 @@ synapps is a web framework for Node.js
 var synapps = require('@synapps/core');
 var app = synapps();
 
-app.route('hello', {
-  world: [
-    {},
-    function(req) {
-      req.resolve('hello world');
-    }
-  ]
-});
+app.route('helloworld', [{}, function(req) {
+  req.resolve('hello world');
+}]);
 
 app.listen(3000);
 ```
 
 ```bash
-$ curl http://127.0.0.1:3000/API/hello:world
-hello world
+$ curl http://127.0.0.1:3000/API/helloworld
+"hello world"
 ```
 
 ## Installation
