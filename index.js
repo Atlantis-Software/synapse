@@ -80,8 +80,9 @@ module.exports = function() {
     };
 
     synapps.close = function(cb) {
+      cb = cb || function(){};
       var httpClosed = asynk.deferred();
-      var ipcClosed = asynk.deferred();
+      var workerClosed = asynk.deferred();
       if (synapps._http.listening) {
         Object.keys(socketMap).forEach(function(key) {
           socketMap[key].destroy();
@@ -96,14 +97,19 @@ module.exports = function() {
         httpClosed.resolve();
       }
 
-      synapps._ipc.close(function(err) {
+      synapps._scheduler.close(function(err) {
         if (err) {
-          return ipcClosed.reject(err);
+          return workerClosed.reject(err);
         }
-        ipcClosed.resolve();
+        synapps._ipc.close(function(err) {
+          if (err) {
+            return workerClosed.reject(err);
+          }
+          workerClosed.resolve();
+        });
       });
-      cb = cb || function(){};
-      asynk.when(httpClosed, ipcClosed).asCallback(cb);
+
+      asynk.when(httpClosed, workerClosed).asCallback(cb);
     };
   } else {
     // Worker
