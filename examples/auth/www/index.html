@@ -29,7 +29,7 @@
           }
           $.ajax({
             method: "POST",
-            url: "/API/user:login",
+            url: "/user/login",
             data: { username: $('#username').val(), password: $('#password').val() }
           }).done(function(data) {
             sessionID = data.sessionID;
@@ -44,7 +44,7 @@
           event.preventDefault();
           $.ajax({
             method: "POST",
-            url: "/API/user:restricted",
+            url: "/user/restricted",
             data: { sessionID: sessionID }
           }).done(function(data) {
             $('#content').text(data.msg);

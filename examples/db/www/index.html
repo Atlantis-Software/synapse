@@ -23,7 +23,7 @@
       function updateTodos() {
         $.ajax({
           method: "POST",
-          url: "/API/todo:list",
+          url: "/todo/list",
         }).done(function(data) {
           $('#content').html('');
           data.todos.forEach(function(todo) {
@@ -42,7 +42,7 @@
           }
           $.ajax({
             method: "POST",
-            url: "/API/todo:add",
+            url: "/todo/add",
             data: { label: $('#todo').val() }
           }).done(function(data) {
             $('#todo').val('');

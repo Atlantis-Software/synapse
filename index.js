@@ -14,7 +14,7 @@ module.exports = function() {
 
   synapps._config = {
     staticDir: false,
-    apiDir: 'API',
+    apiDir: null,
     debug: 'error',
     indexScript: module.parent.filename,
     logFile: 'synapps.log'
@@ -123,8 +123,8 @@ module.exports = function() {
       synapps._middlewares.push(middleware);
     };
 
-    synapps.route = function(route, definition) {
-      return synapps._router.addRoute(route, definition);
+    synapps.route = function() {
+      return synapps._router.addRoute.apply(synapps._router, arguments);
     };
 
     synapps.listen = function() {
