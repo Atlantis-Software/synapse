@@ -6,8 +6,8 @@ module.exports = function(host, port, dynFolder) {
   var self = this;
   this.host = 'http://' + host || 'http://localhost';
   this.port = port || 80;
-  this.dynFolder = dynFolder || 'API';
-  this.socket = io(this.host + ':' + this.port, {path: '/' + this.dynFolder + '/socket.io'});
+  this.dynFolder = dynFolder ? '/' + dynFolder : '';
+  this.socket = io(this.host + ':' + this.port, {path: this.dynFolder + '/socket.io'});
   this.requests = {};
 
   this.emit = function(route, data) {

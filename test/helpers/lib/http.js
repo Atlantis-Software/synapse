@@ -6,12 +6,12 @@ module.exports = function(host, port, dynFolder) {
   var self = this;
   this.host = 'http://' + host || 'http://localhost';
   this.port = port || 80;
-  this.dynFolder = dynFolder || 'API';
+  this.dynFolder = dynFolder ? '/' + dynFolder : '';
 
   this.emit = function(route, data) {
     var deferred = asynk.deferred();
 
-    request.post({url:this.host + ':' + this.port + '/' + this.dynFolder + '/' + route, json: data}, function optionalCallback(err, httpResponse, body) {
+    request.post({url:this.host + ':' + this.port + this.dynFolder + '/' + route, json: data}, function optionalCallback(err, httpResponse, body) {
       if (err) {
         return deferred.reject(err);
       }
