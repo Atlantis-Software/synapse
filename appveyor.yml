@@ -7,7 +7,6 @@ cache:
   - node_modules
 install:
   - ps: Install-Product node $env:nodejs_version
-  - openssl req -newkey rsa:2048 -nodes -keyout test.key -x509 -days 365 -out test.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
   - npm config set shrinkwrap false
   - if exist node_modules npm prune
   - if exist node_modules npm rebuild

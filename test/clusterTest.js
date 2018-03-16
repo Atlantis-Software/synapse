@@ -2,6 +2,7 @@ var assert = require('assert');
 var Client = require('./helpers/index');
 var asynk = require('asynk');
 var processHelper = require('./helpers/process');
+var generateKeys = require('../bin/utils/generateKeys');
 
 describe('cluster', function() {
   var clusterNode1 = processHelper('clusterNode1');
@@ -9,6 +10,8 @@ describe('cluster', function() {
   var client;
 
   before(function(done) {
+    generateKeys('test');
+
     clusterNode1.on('register', function(identity) {
       if (identity === 'clusterNode2') {
         asynk.when(ready1, ready2).asCallback(done);

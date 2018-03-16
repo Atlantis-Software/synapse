@@ -70,7 +70,6 @@ $ node index
 $ git clone git://github.com/Atlantis-Software/synapps.git
 $ cd synapps/
 $ npm install
-$ openssl req -newkey rsa:2048 -nodes -keyout test.key -x509 -days 365 -out test.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
 $ npm test
 ```
 

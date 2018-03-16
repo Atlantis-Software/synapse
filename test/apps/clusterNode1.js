@@ -17,7 +17,7 @@ clusterNode1.set('tls', {
   cert: certificatePath,
   ca: [certificatePath],
   port: 8101,
-  connectTo: [{name: 'clusterNode2', host:'localhost', port: 8102}]
+  connectTo: [{name: 'clusterNode2', host:'127.0.0.1', port: 8102}]
 });
 
 clusterNode1.route('cluster', {

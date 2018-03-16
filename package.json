@@ -18,17 +18,23 @@
   ],
   "scripts": {
     "test": "nyc mocha --timeout=10000 --exit",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "debug": "node ./lib/debug.js"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "bin": {
+    "synapps": "bin/synapps.js",
+    "synapps-cluster": "bin/synapps-cluster.js",
+    "synapps-debug": "bin/synapps-debug.js"
   },
   "dependencies": {
     "asynk": "~0.0.12",
+    "commander": "~2.15.0",
     "formidable": "~1.1.1",
     "inquirer": "~5.1.0",
     "lodash": "4.17.5",
     "log4js": "~2.5.3",
     "mime-types": "~2.1.18",
     "moment-timezone": "~0.5.13",
+    "node-forge": "~0.7.4",
     "offshore-validator": "~0.1.0",
     "socket.io": "~2.0.4",
     "telepathymq": "~0.0.2",
