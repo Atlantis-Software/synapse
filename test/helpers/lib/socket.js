@@ -17,7 +17,7 @@ module.exports = function(host, port, dynFolder) {
       self.requests[uid] = {deferred: deferred};
     });
     return deferred.promise();
-  }
+  };
 
   this.on = this.socket.on.bind(this.socket);
 
@@ -49,4 +49,4 @@ module.exports = function(host, port, dynFolder) {
       self.requests[response.notification.uid].deferred.notify(response);
     }
   });
-}
+};

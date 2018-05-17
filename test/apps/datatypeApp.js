@@ -83,8 +83,8 @@ datatypeApp.route('type', {
         return req.reject(req.data.date + ' should be a date');
       }
 
-      if (req.data.date.toString() !== new Date(2009,07,11).toString()) {
-        return req.reject(req.data.date + ' should equal `' + new Date(2009,07,11) + '`');
+      if (req.data.date.toString() !== new Date(2009, 7, 11).toString()) {
+        return req.reject(req.data.date + ' should equal `' + new Date(2009, 7, 11) + '`');
       }
 
       req.resolve({ok: true});
@@ -165,7 +165,7 @@ datatypeApp.route('get', {
   date: [
     {},
     function(req) {
-      return req.resolve({response: new Date(1998,05,10)});
+      return req.resolve({response: new Date(1998, 5, 10)});
     }
   ],
   buffer: [

@@ -6,4 +6,4 @@ module.exports = function(host, port, dynFolder) {
   this.http = new Http(host, port, dynFolder);
   this.jsonp = new Jsonp(host, port, dynFolder);
   this.socket = new Socket(host, port, dynFolder);
-}
+};

@@ -1,5 +1,4 @@
 var synapps = require('../../index');
-var _ = require('lodash');
 var hostHelper = require('../helpers/host');
 var asynk = require('asynk');
 
@@ -14,29 +13,28 @@ debugApp.route('test', {
     {},
     function(req) {
       var n = 30000000;
-      var a = Array(n = n/2),
-      t = (Math.sqrt(4+8*n)-2)/4,
-      u = 0,
-      r = [];
-      for(var i = 1; i <= t; i++){
+      var a = Array(n = n/2);
+      var t = (Math.sqrt(4+8*n)-2)/4;
+      var u = 0;
+      var r = [];
+      for (var i = 1; i <= t; i++){
         u = (n-i)/(1+2*i);
-        for(var j = i; j <= u; j++) a[i + j + 2*i*j] = true;
+        for (var j = i; j <= u; j++) a[i + j + 2*i*j] = true;
       }
-      for(var i = 0; i<= n; i++) !a[i] && r.push(i*2+1);
+      for (var k = 0; k<= n; k++) !a[k] && r.push(k*2+1);
       req.resolve({response: 'PONG'});
     }
   ],
   memory: [
     {},
     function(req) {
-      var obj = {};
       var text = '';
       var arr = new Array(700).fill('a');
       asynk.each(arr, function(element, cb) {
         text += text;
         element = new Buffer(text);
         setTimeout(cb, 3);
-      }).serie().done(function(err, res) {
+      }).serie().done(function() {
         req.resolve({response: 'PONG'});
       });
     }

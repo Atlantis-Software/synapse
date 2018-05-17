@@ -12,16 +12,16 @@ module.exports = function(name, ip, dir) {
   var cert = forge.pki.createCertificate();
   var now = new Date();
   var oneYear = new Date(new Date(now).setFullYear(now.getFullYear() + 1));
-  
+
   Object.assign(cert, {
-        publicKey: keyPair.publicKey
-      , serialNumber: '01'
-      , validity: {
-            notBefore: now
-          , notAfter: oneYear
-      }
+    publicKey: keyPair.publicKey,
+    serialNumber: '01',
+    validity: {
+      notBefore: now,
+      notAfter: oneYear
+    }
   });
-  
+
   cert.setExtensions([{
     name: 'subjectAltName',
     altNames: [{
@@ -29,12 +29,12 @@ module.exports = function(name, ip, dir) {
       ip: ip
     }]
   }]);
-  
+
   cert.sign(keyPair.privateKey, forge.md.sha256.create()); // self signed
-  
+
   var privateKeyPem = forge.pki.privateKeyToPem(keyPair.privateKey);
   var certificatePem = forge.pki.certificateToPem(cert);
-  
+
   fs.writeFileSync(path.join(dir, name + '.key'), privateKeyPem);
   fs.writeFileSync(path.join(dir, name + '.crt'), certificatePem);
 };

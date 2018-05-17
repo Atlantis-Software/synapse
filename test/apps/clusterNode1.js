@@ -1,6 +1,4 @@
 var synapps = require('../../index');
-var asynk = require('asynk');
-var _ = require('lodash');
 var path = require('path');
 var hostHelper = require('../helpers/host');
 
@@ -24,10 +22,11 @@ clusterNode1.route('cluster', {
   ping: [
     {},
     function(req) {
-      req.emit('clusterNode2', {request: 'cluster:pong'}).done(function(result) {
-        return req.resolve(result.data);
-      }).fail(function(err) {
-        req.reject(err);
+      req.emit('clusterNode2', '/cluster/pong', function(err, result) {
+        if (err) {
+          return req.reject(err);
+        }
+        req.resolve(result.data);
       });
     }
   ],
@@ -76,7 +75,7 @@ clusterNode1.route('cluster', {
   throw: [
     {},
     function(req) {
-      req.emit('clusterNode2', {request: 'cluster:pong'}).done(function(result) {
+      req.emit('clusterNode2', {request: 'cluster:pong'}).done(function() {
         throw new Error('Throw after second node callback');
       }).fail(function(err) {
         req.reject(err);

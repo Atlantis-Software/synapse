@@ -1,6 +1,6 @@
+/* eslint-env node, mocha */
 var assert = require('assert');
 var Client = require('./helpers/index');
-var _ = require('lodash');
 var processHelper = require('./helpers/process');
 
 describe('middlewares', function() {

@@ -1,3 +1,4 @@
+/* eslint-env node, mocha */
 var assert = require('assert');
 var Client = require('./helpers/index');
 var _ = require('lodash');
@@ -42,7 +43,7 @@ describe('datatypes', function() {
     });
     it('should accept date input', function(done) {
       client.http.emit('type:date', {
-        date: new Date(2009,07,11)
+        date: new Date(2009, 7, 11)
       }).asCallback(function(err, data) {
         if (err) {
           return done(err);
@@ -120,7 +121,7 @@ describe('datatypes', function() {
         }
         assert(data.response);
         assert(_.isDate(data.response), 'Should be a date');
-        assert.deepStrictEqual(data.response, new Date(1998,05,10));
+        assert.deepStrictEqual(data.response, new Date(1998, 5, 10));
         done();
       });
     });

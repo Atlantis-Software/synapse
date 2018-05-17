@@ -1,11 +1,11 @@
+/* eslint-env node, mocha */
 var assert = require('assert');
 var Client = require('./helpers/index');
-var _ = require('lodash');
 var processHelper = require('./helpers/process');
 
 describe('policies', function() {
   var policyApp = processHelper('policyApp');
-  var comPolicyApp;
+  var client;
 
   before(function(done) {
     policyApp.start(8054).done(function() {

@@ -1,3 +1,4 @@
+/* eslint-env node, mocha */
 var assert = require('assert');
 var Client = require('./helpers/index');
 var processHelper = require('./helpers/process');

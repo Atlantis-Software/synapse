@@ -1,5 +1,4 @@
 var synapps = require('../../index');
-var _ = require('lodash');
 var hostHelper = require('../helpers/host');
 
 var protocolApp = synapps();

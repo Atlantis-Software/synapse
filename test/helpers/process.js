@@ -24,7 +24,7 @@ module.exports = function(appName) {
 
     sock.on('register', function(identity) {
       if (identity === appName) {
-        sock.defer(appName, 'start', port).done(function(data) {
+        sock.defer(appName, 'start', port).done(function() {
           app.running = true;
           sock.removeAllListeners('app register');
           ready.resolve();
@@ -49,6 +49,7 @@ module.exports = function(appName) {
     }
 
     return stop;
-  }
+  };
+
   return app;
 };

@@ -1,5 +1,4 @@
 var synapps = require('../../index');
-var _ = require('lodash');
 var hostHelper = require('../helpers/host');
 
 var middlewareApp = synapps();
@@ -21,10 +20,7 @@ middlewareApp.use(function(req, next) {
     if (req.data.msg === 'Middleware throw error') {
       setTimeout(function() {
         throw new Error('middleware err');
-        next();
       }, 0);
-    }
-    if (req.data.msg === 'Middleware timeout') {
     }
   }
 });

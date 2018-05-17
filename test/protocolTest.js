@@ -1,3 +1,4 @@
+/* eslint-env node, mocha */
 var assert = require('assert');
 var Client = require('./helpers/index');
 var processHelper = require('./helpers/process');
@@ -36,7 +37,7 @@ describe('protocoles', function() {
   });
 
   it('socket io room', function(done) {
-    client.socket.emit('test:room', {}).asCallback(function(err, data) {
+    client.socket.emit('test:room', {}).asCallback(function(err) {
       if (err) {
         return done(err);
       }

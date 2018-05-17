@@ -3,7 +3,6 @@ var _ = require('lodash');
 var request = require('request');
 
 module.exports = function(host, port, dynFolder) {
-  var self = this;
   this.host = 'http://' + host || 'http://localhost';
   this.port = port || 80;
   this.dynFolder = dynFolder ? '/' + dynFolder : '';
@@ -39,5 +38,5 @@ module.exports = function(host, port, dynFolder) {
       deferred.resolve(body);
     });
     return deferred.promise();
-  }
-}
+  };
+};

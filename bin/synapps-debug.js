@@ -1,5 +1,3 @@
-var EventEmitter = require('events').EventEmitter;
-var uuid = require('uuid');
 var inquirer = require('inquirer');
 var _ = require('lodash');
 var telepathy = require('telepathymq');
@@ -21,22 +19,22 @@ inquirer.prompt([
 ]).then(function(answers) {
   socket.register('synapps', 'tcp://' + answers.host + ':' + answers.port, function(err) {
     if (err) {
-      console.log('Socket connection error : ', err);
+      console.log('Socket connection error : ', err); // eslint-disable-line no-console
       return;
     }
     socket.defer('synapps', 'debug.state').asCallback(function(err, state) {
       if (err) {
-        console.log('Socket connection error : ', err);
+        console.log('Socket connection error : ', err); // eslint-disable-line no-console
         return;
       }
       if (!state.debugMode) {
-        console.log('the server\'s NodeJs version does not support debug mode');
+        console.log('the server\'s NodeJs version does not support debug mode'); // eslint-disable-line no-console
         socket.close();
         process.exit(0);
         return;
       }
 
-      console.log('\n');
+      console.log('\n'); // eslint-disable-line no-console
 
       var processes = _.keys(state.processes);
 
@@ -45,10 +43,10 @@ inquirer.prompt([
         if (state.processes[processName].debug) {
           status = state.processes[processName].debug;
         }
-        console.log(processName, '\t\t', status);
+        console.log(processName, '\t\t', status); // eslint-disable-line no-console
       });
 
-      console.log('\n');
+      console.log('\n'); // eslint-disable-line no-console
 
       inquirer.prompt([
         {type: 'list', name: 'processName', message: 'What process do you want to change debug mode ?', choices: processes},
@@ -92,7 +90,7 @@ inquirer.prompt([
         },
       ]).then(function(answers) {
         if (!answers.start && !answers.stop) {
-          console.log('Nothing to do');
+          console.log('Nothing to do'); // eslint-disable-line no-console
           socket.close();
           process.exit(0);
           return;
@@ -108,15 +106,15 @@ inquirer.prompt([
         }
         socket.defer('synapps', task, data).asCallback(function(err, response) {
           if (err) {
-            console.log('error : ', err);
+            console.log('error : ', err); // eslint-disable-line no-console
             return;
           }
           if (response.url) {
-            console.log('\n');
-            console.log('debugger url:', response.url);
+            console.log('\n'); // eslint-disable-line no-console
+            console.log('debugger url:', response.url); // eslint-disable-line no-console
           }
-          console.log('\n');
-          console.log('done !');
+          console.log('\n'); // eslint-disable-line no-console
+          console.log('done !'); // eslint-disable-line no-console
           socket.close();
           process.exit(0);
         });

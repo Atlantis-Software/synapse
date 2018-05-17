@@ -1,5 +1,4 @@
 var synapps = require('../../index');
-var _ = require('lodash');
 var hostHelper = require('../helpers/host');
 
 var policyApp = synapps();
@@ -14,7 +13,7 @@ policyApp.policy('named', function(req, next) {
   next('forbidden');
 });
 
-policyApp.policy('throw', function(req, next) {
+policyApp.policy('throw', function() {
   setTimeout(function() {
     throw new Error('policy throw');
   }, 0);

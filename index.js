@@ -63,10 +63,10 @@ module.exports = function() {
         var socketKey = ++lastSocketKey;
         socketMap[socketKey] = socket;
         socket.on('close', function() {
-            delete socketMap[socketKey];
+          delete socketMap[socketKey];
         });
       });
-      synapps._http.listen(port, function(err) {
+      synapps._http.listen(port, function() {
         httpReady.resolve();
       });
       synapps._io = io(synapps);
@@ -137,14 +137,13 @@ module.exports = function() {
       });
       synapps.debug('info', 'Starting Worker id: ' + process.env.WORKER_NAME);
       // init ipc
-      var ipc = IPC(synapps);
-      synapps._ipc = new ipc();
+      synapps._ipc = new (IPC(synapps))();
       worker.run(synapps);
-    }
+    };
 
     synapps.policy = function(name, fn) {
       synapps._policies[name] = fn;
-    }
+    };
   }
 
   return synapps;

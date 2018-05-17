@@ -107,4 +107,4 @@ app.route('user', {
 });
 
 app.listen(3000);
-console.log('Visit http://localhost:3000');
+console.log('Visit http://localhost:3000'); // eslint-disable-line no-console
