@@ -6,6 +6,7 @@ var http = require('./lib/http');
 var io = require('./lib/io');
 var IPC = require('./lib/ipc');
 var asynk = require('asynk');
+var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 
 module.exports = function() {
@@ -32,6 +33,10 @@ module.exports = function() {
 
   synapps.use = noop;
   synapps.route = noop;
+  synapps.get = noop;
+  synapps.post = noop;
+  synapps.put = noop;
+  synapps.delete = noop;
   synapps.listen = noop;
   synapps.policy = noop;
   synapps.close = noop;
@@ -125,6 +130,42 @@ module.exports = function() {
 
     synapps.route = function() {
       return synapps._router.addRoute.apply(synapps._router, arguments);
+    };
+
+    synapps.get = function(route, options, handler) {
+      if (_.isUndefined(handler)) {
+        handler = options;
+        options = {};
+      }
+      options.method = 'get';
+      return synapps._router.addRoute(route, options, handler);
+    };
+
+    synapps.post = function(route, options, handler) {
+      if (_.isUndefined(handler)) {
+        handler = options;
+        options = {};
+      }
+      options.method = 'post';
+      return synapps._router.addRoute(route, options, handler);
+    };
+
+    synapps.put = function(route, options, handler) {
+      if (_.isUndefined(handler)) {
+        handler = options;
+        options = {};
+      }
+      options.method = 'put';
+      return synapps._router.addRoute(route, options, handler);
+    };
+
+    synapps.delete = function(route, options, handler) {
+      if (_.isUndefined(handler)) {
+        handler = options;
+        options = {};
+      }
+      options.method = 'delete';
+      return synapps._router.addRoute(route, options, handler);
     };
 
     synapps.listen = function() {

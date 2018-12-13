@@ -7,10 +7,10 @@ module.exports = function(host, port, dynFolder) {
   this.port = port || 80;
   this.dynFolder = dynFolder ? '/' + dynFolder : '';
 
-  this.emit = function(route, data) {
+  this._send = function(method, route, data) {
     var deferred = asynk.deferred();
 
-    request.post({url:this.host + ':' + this.port + this.dynFolder + '/' + route, json: data}, function optionalCallback(err, httpResponse, body) {
+    request[method]({url:this.host + ':' + this.port + this.dynFolder + '/' + route, json: data}, function optionalCallback(err, httpResponse, body) {
       if (err) {
         return deferred.reject(err);
       }
@@ -35,8 +35,31 @@ module.exports = function(host, port, dynFolder) {
       if (httpResponse.statusCode !== 200) {
         return deferred.reject(new Error(body));
       }
+
       deferred.resolve(body);
     });
     return deferred.promise();
   };
+
+  this.emit = function(route, data) {
+    return this._send('post', route, data);
+  };
+
+  this.get = function(route, data) {
+    return this._send('get', route, data);
+  };
+
+  this.post = function(route, data) {
+    return this._send('post', route, data);
+  };
+
+  this.put = function(route, data) {
+    return this._send('put', route, data);
+  };
+
+  this.delete = function(route, data) {
+    return this._send('delete', route, data);
+  };
+
 };
+

@@ -25,6 +25,50 @@ describe('protocoles', function() {
     });
   });
 
+  it('http/get', function(done) {
+    client.http.get('test:1', {}).asCallback(function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      assert(data.get);
+      assert.strictEqual(data.get, '1');
+      done();
+    });
+  });
+
+  it('http/post', function(done) {
+    client.http.post('test:2', {}).asCallback(function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      assert(data.post);
+      assert.strictEqual(data.post, '2');
+      done();
+    });
+  });
+
+  it('http/put', function(done) {
+    client.http.put('test:3', {}).asCallback(function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      assert(data.put);
+      assert.strictEqual(data.put, '3');
+      done();
+    });
+  });
+
+  it('http/delete', function(done) {
+    client.http.delete('test:2', {}).asCallback(function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      assert(data.delete);
+      assert.strictEqual(data.delete, '2');
+      done();
+    });
+  });
+
   it('socket io', function(done) {
     client.socket.emit('test:ping', {msg: 'PING FIRST'}).asCallback(function(err, data) {
       if (err) {
