@@ -1,7 +1,7 @@
 {
   "name": "@synapps/core",
   "description": "web framework for node",
-  "version": "0.0.14",
+  "version": "1.0.0",
   "author": "Alexandre Tiertant <a.tiertant@atlantis-software.net>",
   "license": "MIT",
   "main": "./index.js",
@@ -32,10 +32,10 @@
     "formidable": "~1.2.1",
     "inquirer": "~6.2.1",
     "lodash": "4.17.11",
-    "log4js": "~3.0.6",
+    "log4js": "~4.0.2",
     "mime-types": "~2.1.21",
     "moment-timezone": "~0.5.23",
-    "node-forge": "~0.7.6",
+    "node-forge": "~0.8.0",
     "offshore-validator": "~0.1.0",
     "socket.io": "~2.2.0",
     "telepathymq": "~0.0.4"
@@ -44,7 +44,7 @@
     "coveralls": "~3.0.2",
     "istanbul": "0.4.5",
     "mocha": "~5.2.0",
-    "nyc": "~13.1.0",
+    "nyc": "~13.2.0",
     "request": "~2.88.0",
     "socket.io-client": "~2.2.0"
   },
