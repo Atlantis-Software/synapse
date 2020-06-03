@@ -28,17 +28,17 @@
   },
   "dependencies": {
     "asynk": "~0.0.12",
-    "commander": "~2.19.0",
-    "formidable": "~1.2.1",
-    "inquirer": "~6.2.1",
-    "lodash": "4.17.11",
-    "log4js": "~4.0.2",
-    "mime-types": "~2.1.21",
+    "commander": "~5.1.0",
+    "formidable": "~1.2.2",
+    "inquirer": "~7.1.0",
+    "lodash": "~4.17.15",
+    "log4js": "~6.2.1",
+    "mime-types": "~2.1.27",
     "moment-timezone": "~0.5.23",
     "node-forge": "~0.8.0",
     "offshore-validator": "~0.1.0",
     "socket.io": "~2.2.0",
-    "telepathymq": "~0.0.4"
+    "telepathymq": "~0.1.1"
   },
   "devDependencies": {
     "coveralls": "~3.0.2",

@@ -3,7 +3,7 @@ var assert = require('assert');
 var Client = require('./helpers/index');
 var processHelper = require('./helpers/process');
 
-describe('protocoles', function() {
+describe('protocols', function() {
   var protocolApp = processHelper('protocolApp');
   var client;
 

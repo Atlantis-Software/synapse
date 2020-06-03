@@ -8,6 +8,7 @@ var IPC = require('./lib/ipc');
 var asynk = require('asynk');
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
+var child_process = require('child_process');
 
 module.exports = function() {
   var noop = function() {};
@@ -40,6 +41,7 @@ module.exports = function() {
   synapps.listen = noop;
   synapps.policy = noop;
   synapps.close = noop;
+  synapps.createWorker = noop;
   synapps.isMaster = false;
   synapps.isWorker = false;
 
@@ -47,6 +49,7 @@ module.exports = function() {
   if (!process.env.isWorker) {
     // Master
     synapps.isMaster = true;
+    synapps._workers = {};
     var lastSocketKey = 0;
     var socketMap = {};
     synapps.listen = function(port, cb) {
@@ -56,7 +59,7 @@ module.exports = function() {
       });
       var httpReady = asynk.deferred();
       var ipcReady = asynk.deferred();
-       // set process name
+      // set process name
       synapps._config.name = synapps._config.name || 'synapps';
       synapps._config.masterName = synapps._config.name;
       // init ipc
@@ -85,7 +88,7 @@ module.exports = function() {
     };
 
     synapps.close = function(cb) {
-      cb = cb || function(){};
+      cb = cb || function() {};
       var httpClosed = asynk.deferred();
       var workerClosed = asynk.deferred();
       if (synapps._http.listening) {
@@ -102,6 +105,10 @@ module.exports = function() {
         httpClosed.resolve();
       }
 
+      _.keys(synapps._workers).forEach(function(key) {
+        synapps._ipc.socket.emit(key, 'synapps.kill');
+      });
+
       synapps._scheduler.close(function(err) {
         if (err) {
           return workerClosed.reject(err);
@@ -116,7 +123,20 @@ module.exports = function() {
 
       asynk.when(httpClosed, workerClosed).asCallback(cb);
     };
-  } else {
+
+    synapps.createWorker = function(name, fct) {
+      var new_worker_opts = {
+        env: {
+          isWorker: name,
+          NODE_ENV: process.env.NODE_ENV,
+          WORKER_NAME: name
+        }
+      };
+      var worker = child_process.spawn(process.execPath, [synapps._config.indexScript], new_worker_opts);
+      synapps._workers[name] = worker;
+    };
+
+  } else if (process.env.isWorker === "true") {
     // Worker
     synapps.isWorker = true;
     synapps._middlewares = [];
@@ -185,6 +205,82 @@ module.exports = function() {
     synapps.policy = function(name, fn) {
       synapps._policies[name] = fn;
     };
+  } else {
+    // createWorker
+    synapps.isWorker = true;
+    synapps.fct = noop;
+
+    synapps.listen = function() {
+      // set workers and master names
+      synapps._config.masterName = synapps._config.name || 'synapps';
+      synapps._config.name = process.env.WORKER_NAME;
+      log4js.configure({
+        appenders: { worker: { type: 'file', filename: synapps._config.logFile } },
+        categories: { default: { appenders: ['worker'], level: synapps._config.debug } },
+      });
+      synapps.debug('info', 'Starting Worker name: ' + process.env.WORKER_NAME);
+      // init ipc
+      synapps._ipc = new (IPC(synapps))();
+      // init worker
+      var worker = {};
+
+      // call an other request
+      worker.emit = function(hostname, req, cb) {
+        // invalid arguments
+        if (!arguments.length) {
+          throw new Error('invalid arguments: req.emit([hostname = String,] request = Object || String [, cb = function ])');
+        }
+        // if hostname isn't specified, send request to master
+        if (arguments.length === 1) {
+          req = hostname;
+          hostname = 'master';
+        }
+        if (arguments.length === 2 && _.isFunction(req)) {
+          cb = req;
+          req = hostname;
+          hostname = 'master';
+        }
+        if (_.isString(req)) {
+          req = { request: req };
+        }
+        if (!_.isString(hostname) || !_.isPlainObject(req)) {
+          throw new Error('invalid arguments: req.emit([hostname = String,] request = Object || String [, cb = function ])');
+        }
+        var promise = synapps._ipc.send(hostname, req, this.requestErrorHandler);
+        if (cb && _.isFunction(cb)) {
+          return promise.asCallback(cb);
+        }
+        return promise;
+      };
+
+      worker.debug = function() {
+        var args = Array.prototype.slice.call(arguments);
+        args.forEach(function(arg, index) {
+          if (arg instanceof Error) {
+            args[index] = arg.stack + os.EOL;
+          }
+        });
+        var msg = args.join(' ');
+        synapps.debug('debug', msg);
+      };
+
+      worker.on = function(event, fct) {
+        switch (event) {
+          case 'request':
+            synapps._ipc.on('request', fct);
+            break;
+        }
+      };
+      synapps.fct(worker);
+    };
+
+    synapps.createWorker = function(name, fct) {
+      if (process.env.WORKER_NAME !== name) {
+        return;
+      }
+      synapps.fct = fct;
+    };
+
   }
 
   return synapps;
