@@ -219,59 +219,68 @@ module.exports = function() {
         categories: { default: { appenders: ['worker'], level: synapps._config.debug } },
       });
       synapps.debug('info', 'Starting Worker name: ' + process.env.WORKER_NAME);
-      // init ipc
-      synapps._ipc = new (IPC(synapps))();
-      // init worker
-      var worker = {};
 
-      // call an other request
-      worker.emit = function(hostname, req, cb) {
-        // invalid arguments
-        if (!arguments.length) {
-          throw new Error('invalid arguments: req.emit([hostname = String,] request = Object || String [, cb = function ])');
-        }
-        // if hostname isn't specified, send request to master
-        if (arguments.length === 1) {
-          req = hostname;
-          hostname = 'master';
-        }
-        if (arguments.length === 2 && _.isFunction(req)) {
-          cb = req;
-          req = hostname;
-          hostname = 'master';
-        }
-        if (_.isString(req)) {
-          req = { request: req };
-        }
-        if (!_.isString(hostname) || !_.isPlainObject(req)) {
-          throw new Error('invalid arguments: req.emit([hostname = String,] request = Object || String [, cb = function ])');
-        }
-        var promise = synapps._ipc.send(hostname, req, this.requestErrorHandler);
-        if (cb && _.isFunction(cb)) {
-          return promise.asCallback(cb);
-        }
-        return promise;
-      };
+      // worker error handler
+      var domain = require('domain');
+      var workerDomain = domain = domain.create();
+      workerDomain.on('error', function(err) {
+        synapps.debug('error', err);
+      });
+      workerDomain.run(function() {
+        // init ipc
+        synapps._ipc = new (IPC(synapps))();
+        // init worker
+        var worker = {};
 
-      worker.debug = function() {
-        var args = Array.prototype.slice.call(arguments);
-        args.forEach(function(arg, index) {
-          if (arg instanceof Error) {
-            args[index] = arg.stack + os.EOL;
+        // call an other request
+        worker.emit = function(hostname, req, cb) {
+          // invalid arguments
+          if (!arguments.length) {
+            throw new Error('invalid arguments: req.emit([hostname = String,] request = Object || String [, cb = function ])');
           }
-        });
-        var msg = args.join(' ');
-        synapps.debug('debug', msg);
-      };
+          // if hostname isn't specified, send request to master
+          if (arguments.length === 1) {
+            req = hostname;
+            hostname = 'master';
+          }
+          if (arguments.length === 2 && _.isFunction(req)) {
+            cb = req;
+            req = hostname;
+            hostname = 'master';
+          }
+          if (_.isString(req)) {
+            req = { request: req };
+          }
+          if (!_.isString(hostname) || !_.isPlainObject(req)) {
+            throw new Error('invalid arguments: req.emit([hostname = String,] request = Object || String [, cb = function ])');
+          }
+          var promise = synapps._ipc.send(hostname, req);
+          if (cb && _.isFunction(cb)) {
+            return promise.asCallback(cb);
+          }
+          return promise;
+        };
 
-      worker.on = function(event, fct) {
-        switch (event) {
-          case 'request':
-            synapps._ipc.on('request', fct);
-            break;
-        }
-      };
-      synapps.fct(worker);
+        worker.debug = function() {
+          var args = Array.prototype.slice.call(arguments);
+          args.forEach(function(arg, index) {
+            if (arg instanceof Error) {
+              args[index] = arg.stack + os.EOL;
+            }
+          });
+          var msg = args.join(' ');
+          synapps.debug('debug', msg);
+        };
+
+        worker.on = function(event, fct) {
+          switch (event) {
+            case 'request':
+              synapps._ipc.on('request', fct);
+              break;
+          }
+        };
+        synapps.fct(worker);
+      });
     };
 
     synapps.createWorker = function(name, fct) {

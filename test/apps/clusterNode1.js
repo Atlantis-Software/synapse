@@ -18,6 +18,17 @@ clusterNode1.set('tls', {
   connectTo: [{name: 'clusterNode2', host:'127.0.0.1', port: 8102}]
 });
 
+clusterNode1.createWorker('myWorker', function (worker) {
+  worker.on('request', function (req) {
+    worker.emit('clusterNode2', '/cluster/pong', function(err, result) {
+      if (err) {
+        return req.reject(err);
+      }
+      req.resolve(result.data);
+    });
+  });
+});
+
 clusterNode1.route('cluster', {
   ping: [
     {},
@@ -27,6 +38,18 @@ clusterNode1.route('cluster', {
           return req.reject(err);
         }
         req.resolve(result.data);
+      });
+    }
+  ],
+  workerPing: [
+    {},
+    function(req) {
+      req.emit('myWorker', '/cluster/pong', function(err, result) {
+        if (err) {
+          return req.reject(err);
+        }
+        req.resolve(result);
+        //req.resolve(result.data);
       });
     }
   ],

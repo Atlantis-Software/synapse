@@ -25,6 +25,17 @@ describe('cluster', function() {
     client = new Client('localhost', 8051);
   });
 
+  it('request second node through a worker', function(done) {
+    client.http.emit('cluster:workerPing').asCallback(function(err, data) {
+      if (err) {
+        return done(err);
+      }
+      assert(data.response);
+      assert.strictEqual(data.response, 'PONG');
+      done();
+    });
+  });
+
   it('request second node through first', function(done) {
     client.http.emit('cluster:ping').asCallback(function(err, data) {
       if (err) {

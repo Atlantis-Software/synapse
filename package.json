@@ -1,7 +1,7 @@
 {
   "name": "@synapps/core",
   "description": "web framework for node",
-  "version": "1.1.0-rc.1",
+  "version": "1.1.0-rc.2",
   "author": "Alexandre Tiertant <a.tiertant@atlantis-software.net>",
   "license": "MIT",
   "main": "./index.js",

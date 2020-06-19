@@ -16,7 +16,7 @@ module.exports = function(host, port, dynFolder) {
       }
 
       if (!body) {
-        deferred.reject(new Error('#EMPTY_RESPONSE'));
+        return deferred.reject(new Error('#EMPTY_RESPONSE'));
       }
 
       if (httpResponse.headers['content-type'] && httpResponse.headers['content-type'] === 'text/json' && _.isString(body)) {
