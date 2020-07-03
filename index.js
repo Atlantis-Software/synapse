@@ -1,3 +1,4 @@
+var os = require('os');
 var log4js = require('log4js');
 var router = require('./lib/router');
 var worker = require('./lib/worker');
