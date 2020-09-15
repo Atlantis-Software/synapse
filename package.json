@@ -35,7 +35,7 @@
     "log4js": "~6.2.1",
     "mime-types": "~2.1.27",
     "moment-timezone": "~0.5.23",
-    "node-forge": "~0.8.0",
+    "node-forge": "~0.10.0",
     "offshore-validator": "~0.1.0",
     "socket.io": "~2.2.0",
     "telepathymq": "~0.1.1"
