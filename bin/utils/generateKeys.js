@@ -22,6 +22,14 @@ module.exports = function(name, ip, dir) {
     }
   });
 
+  var attrs = [{
+   name: "commonName",
+   value: name
+  }];
+
+  cert.setSubject(attrs);
+  cert.setIssuer(attrs);
+
   cert.setExtensions([{
     name: 'subjectAltName',
     altNames: [{
