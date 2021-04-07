@@ -24,7 +24,7 @@ module.exports = function(name, ip, dir) {
 
   var attrs = [{
    name: "commonName",
-   value: name
+   value: ip
   }];
 
   cert.setSubject(attrs);
